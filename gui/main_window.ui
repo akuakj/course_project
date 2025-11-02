@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>805</width>
+    <height>467</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>VoiceMaxxing</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="menu_frame">
+      <property name="minimumSize">
+       <size>
+        <width>185</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>185</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QFrame {
+    background-color: #2C3E50;
+    border: none;
+    border-right: 1px solid #34495E;
+}</string>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="spacing">
+        <number>5</number>
+       </property>
+       <property name="leftMargin">
+        <number>5</number>
+       </property>
+       <property name="topMargin">
+        <number>5</number>
+       </property>
+       <property name="rightMargin">
+        <number>5</number>
+       </property>
+       <property name="bottomMargin">
+        <number>5</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="styleSheet">
+          <string notr="true">QLabel {
+    color: #ECF0F1;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 1px solid #34495E;
+}</string>
+         </property>
+         <property name="text">
+          <string>Меню</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_home">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+                background-color: #3498DB;
+                color: white;
+                border: none;
+                padding: 12px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 14px;
+                border-radius: 5px;  }
+QPushButton:hover {
+                background-color: #2980B9;
+                padding-left: 15px;
+            }</string>
+         </property>
+         <property name="text">
+          <string>Начало</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_analyze">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+                background-color: #9B59B6;
+                color: white;
+                border: none;
+                padding: 12px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 14px;
+                border-radius: 5px;
+            }
+QPushButton:hover {
+                background-color: #8E44AD;
+                padding-left: 15px; }</string>
+         </property>
+         <property name="text">
+          <string>Анализирование</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_database">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background-color: #E74C3C;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 5px;
+}
+QPushButton:hover {
+    background-color: #C0392B;
+    padding-left: 15px;
+}</string>
+         </property>
+         <property name="text">
+          <string>База Данных</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_ai">
+         <property name="styleSheet">
+          <string notr="true">QPushButton {
+    background-color: #2ECC71;
+    color: white;
+	font-weight: bold;
+    border: none;
+    padding: 12px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 5px;
+}
+QPushButton:hover {
+    background-color: #27AE60;
+    padding-left: 15px;
+}</string>
+         </property>
+         <property name="text">
+          <string>Нейросеть</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="styleSheet">
+       <string notr="true">background-color: rgba(240, 248, 255, 1);
+
+</string>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="page_start">
+       <widget class="QWidget" name="verticalLayoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>591</width>
+          <height>391</height>
+         </rect>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="styleSheet">
+            <string notr="true">font-size: 24px; font-weight: bold; color: #2C3E50; padding: 10px;
+
+</string>
+           </property>
+           <property name="text">
+            <string>Добро пожаловать!</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="styleSheet">
+            <string notr="true">font-size: 14px; color: #34495E; padding: 10px; font-weight: bold;
+
+</string>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Данное приложение предназначено для анализа и обработки голосовых&lt;br/&gt;данных с использованием современных алгоритмов &lt;br/&gt;машинного обучения.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;⚠️ Важное замечание:&lt;br/&gt;Данная программа является любительской разработкой и не даёт 100% &lt;br/&gt;гарантию на абсолютную точность результатов. &lt;br/&gt;&lt;br/&gt;Эффективность распознавания может варьироваться в зависимости от:&lt;br/&gt;• Качества входного аудиосигнала&lt;br/&gt;• Чистоты речи и дикции&lt;br/&gt;• Фоновых шумов и помех&lt;br/&gt;• Языковых особенностей&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="layoutWidget_4">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>420</y>
+          <width>601</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_buttons_4">
+         <item>
+          <spacer name="horizontalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_start">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+                background-color: #2980B9;
+                padding-left: 14px;
+            }
+</string>
+           </property>
+           <property name="text">
+            <string>            ⟶          </string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_analysis">
+       <widget class="QWidget" name="layoutWidget">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>601</width>
+          <height>42</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_buttons">
+         <item>
+          <widget class="QPushButton" name="btn_load_audio">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+                background-color: #2980B9;
+                padding-left: 14px;
+            }
+</string>
+           </property>
+           <property name="text">
+            <string>Загрузить аудио</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_record_audio">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+                background-color: #2980B9;
+                padding-left: 14px;
+            }
+</string>
+           </property>
+           <property name="text">
+            <string>Записать аудио</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_file_info">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>60</y>
+          <width>601</width>
+          <height>161</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox {
+    font-weight: bold;
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+    font-size: 14px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px 0 5px;
+    color: #2C3E50;
+}</string>
+        </property>
+        <property name="title">
+         <string>Информация о файле</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_group">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <property name="leftMargin">
+          <number>10</number>
+         </property>
+         <property name="topMargin">
+          <number>20</number>
+         </property>
+         <property name="rightMargin">
+          <number>10</number>
+         </property>
+         <property name="bottomMargin">
+          <number>10</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_file_name">
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+    font-size: 14px;
+    color: #7F8C8D;
+    padding: 5px;
+    background-color: #F8F9F9;
+    border: 1px solid #EBEDEF;
+    border-radius: 3px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Файл не выбран</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QProgressBar" name="progress_audio">
+           <property name="styleSheet">
+            <string notr="true">QProgressBar {
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    text-align: center;
+    height: 20px;
+}
+
+QProgressBar::chunk {
+    background-color: #3498DB;
+    border-radius: 4px;
+}</string>
+           </property>
+           <property name="value">
+            <number>0</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_control">
+           <item>
+            <spacer name="horizontalSpacer_5">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_start_audio">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #2980B9;
+}
+QPushButton:disabled {
+    background-color: #BDC3C7;
+}</string>
+             </property>
+             <property name="text">
+              <string>▶ </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_pause_audio">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #2980B9;
+}
+QPushButton:disabled {
+    background-color: #BDC3C7;
+}</string>
+             </property>
+             <property name="text">
+              <string>| |</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btn_close_audio">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #2980B9;
+}
+QPushButton:disabled {
+    background-color: #BDC3C7;
+}</string>
+             </property>
+             <property name="text">
+              <string>✕</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="layoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>420</y>
+          <width>601</width>
+          <height>45</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_buttons_3">
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_analysis_audio">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+                background-color: #2980B9;
+                padding-left: 14px;
+            }
+</string>
+           </property>
+           <property name="text">
+            <string>Анализировать</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_database">
+       <widget class="QTableWidget" name="table_voices">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>140</y>
+          <width>601</width>
+          <height>251</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QTableWidget {
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    background-color: white;
+    alternate-background-color: #F8F9F9;
+}
+QHeaderView::section {
+    background-color: #34495E;
+    color: white;
+    padding: 8px;
+    border: none;
+    font-weight: bold;
+}</string>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+        </property>
+        <attribute name="horizontalHeaderMinimumSectionSize">
+         <number>50</number>
+        </attribute>
+        <attribute name="horizontalHeaderHighlightSections">
+         <bool>false</bool>
+        </attribute>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>ID</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>ФИО</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Адрес пр-ния</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Био. данные</string>
+         </property>
+        </column>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_stats">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>400</y>
+          <width>601</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox {
+    font-weight: bold;
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+    font-size: 14px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px 0 5px;
+    color: #2C3E50;
+}</string>
+        </property>
+        <property name="title">
+         <string>Статистика базы</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_stats">
+         <item>
+          <widget class="QLabel" name="label_total_records">
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+    color: #2C3E50;
+    font-size: 13px;
+    padding: 5px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Всего записей: 0</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_last_update">
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+    color: #2C3E50;
+    font-size: 13px;
+    padding: 5px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Последнее обновление: -</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_search">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>601</width>
+          <height>81</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QGroupBox {
+    font-weight: bold;
+    border: 1px solid #BDC3C7;
+    border-radius: 5px;
+    margin-top: 10px;
+    padding-top: 10px;
+    font-size: 14px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 5px 0 5px;
+    color: #2C3E50;
+}</string>
+        </property>
+        <property name="title">
+         <string>Поиск по базе</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_search">
+         <item>
+          <widget class="QLineEdit" name="lineEdit_search">
+           <property name="styleSheet">
+            <string notr="true">QLineEdit {
+    border: 1px solid #BDC3C7;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+}
+QLineEdit:focus {
+    border-color: #3498DB;
+}</string>
+           </property>
+           <property name="placeholderText">
+            <string>Введите имя для поиска...</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_search_text">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #2980B9;
+}</string>
+           </property>
+           <property name="text">
+            <string> Найти</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="layoutWidget_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>601</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_control_2">
+         <item>
+          <widget class="QPushButton" name="btn_refresh_db">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #2ECC71;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #27AE60;
+}</string>
+           </property>
+           <property name="text">
+            <string>Обновить БД</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_delete_record">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #E74C3C;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #C0392B;
+}</string>
+           </property>
+           <property name="text">
+            <string> Удалить запись</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_db_status">
+           <property name="styleSheet">
+            <string notr="true">QLabel {
+    color: #27AE60;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #EAFAEE;
+    border: 1px solid #27AE60;
+    border-radius: 3px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Статус БД: OK</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_ai"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
