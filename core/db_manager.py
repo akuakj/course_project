@@ -1,7 +1,6 @@
 import os
 from datetime import datetime
 from tinydb import TinyDB, Query
-from tinydb.table import Document
 import uuid
 import numpy as np
 
@@ -10,9 +9,6 @@ class TinyDBVoiceManager:
     def __init__(self, db_path="data/voice_database.json"):
         """
         Инициализация менеджера TinyDB
-
-        Args:
-            db_path: путь к файлу базы данных
         """
         # Создаем папку data если её нет
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
@@ -26,15 +22,6 @@ class TinyDBVoiceManager:
     def add_voice_person(self, full_name, audio_files, vector_data, notes=None):
         """
         Добавление человека в базу данных
-
-        Args:
-            full_name: ФИО человека
-            audio_files: список путей к аудиофайлам
-            vector_data: вектор эмбеддинга (256 float32)
-            notes: заметки (опционально)
-
-        Returns:
-            str: ID добавленной записи
         """
         try:
             # Генерируем уникальный ID
@@ -44,17 +31,17 @@ class TinyDBVoiceManager:
             if isinstance(vector_data, np.ndarray):
                 vector_data = vector_data.tolist()
 
-            # Создаем документ
-            doc = Document({
+            # Создаем документ с нашим кастомным ID
+            doc = {
                 'id': record_id,
                 'full_name': full_name,
                 'audio_files': audio_files,
                 'created_at': datetime.now().isoformat(),
                 'vector_data': vector_data,
                 'notes': notes or ""
-            }, doc_id=record_id)
+            }
 
-            # Добавляем в базу
+            # Добавляем в базу (TinyDB сам сгенерирует числовой doc_id)
             self.voice_table.insert(doc)
 
             print(f"✅ Добавлен: {full_name} (ID: {record_id})")
@@ -66,50 +53,26 @@ class TinyDBVoiceManager:
 
     def get_person_by_id(self, person_id):
         """
-        Получение человека по ID
-
-        Args:
-            person_id: ID записи
-
-        Returns:
-            dict: данные человека или None
+        Получение человека по нашему UUID
         """
-        result = self.voice_table.get(doc_id=person_id)
-        return result
+        results = self.voice_table.search(self.query.id == person_id)
+        return results[0] if results else None
 
     def get_person_by_name(self, full_name):
         """
         Поиск человека по ФИО
-
-        Args:
-            full_name: ФИО для поиска
-
-        Returns:
-            list: список найденных записей
         """
-        results = self.voice_table.search(self.query.full_name == full_name)
-        return results
+        return self.voice_table.search(self.query.full_name == full_name)
 
     def get_all_people(self):
         """
         Получение всех записей из базы данных
-
-        Returns:
-            list: список всех людей
         """
         return self.voice_table.all()
 
     def search_similar_voices(self, query_vector, top_k=5, similarity_threshold=0.7):
         """
         Поиск похожих голосов по вектору
-
-        Args:
-            query_vector: вектор для поиска
-            top_k: количество результатов
-            similarity_threshold: порог сходства
-
-        Returns:
-            list: список совпадений [{'person': dict, 'similarity': float}]
         """
         if isinstance(query_vector, np.ndarray):
             query_vector = query_vector.tolist()
@@ -152,16 +115,10 @@ class TinyDBVoiceManager:
 
     def delete_person(self, person_id):
         """
-        Удаление человека по ID
-
-        Args:
-            person_id: ID записи для удаления
-
-        Returns:
-            bool: успех операции
+        Удаление человека по нашему UUID
         """
         try:
-            self.voice_table.remove(doc_ids=[person_id])
+            self.voice_table.remove(self.query.id == person_id)
             print(f"✅ Удален человек с ID: {person_id}")
             return True
         except Exception as e:
@@ -171,11 +128,16 @@ class TinyDBVoiceManager:
     def get_statistics(self):
         """
         Получение статистики базы данных
-
-        Returns:
-            dict: статистика
         """
         all_people = self.get_all_people()
+
+        if not all_people:
+            return {
+                'total_records': 0,
+                'unique_people': 0,
+                'total_audio_files': 0,
+                'last_update': 'Never'
+            }
 
         return {
             'total_records': len(all_people),
@@ -186,5 +148,4 @@ class TinyDBVoiceManager:
 
     def close(self):
         """Закрытие соединения с БД"""
-        self.db.close()
         self.db.close()
