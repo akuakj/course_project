@@ -3,6 +3,8 @@ from PySide6.QtCore import Qt
 from datetime import datetime
 from .db_manager import TinyDBVoiceManager
 
+# Импортируем диалог с подробностями
+from .person_details_dialog import PersonDetailsDialog
 
 class DatabaseController:
     def __init__(self, main_controller):
@@ -14,96 +16,86 @@ class DatabaseController:
         self.main.btn_refresh_db.clicked.connect(self.refresh_database)
         self.main.btn_delete_record.clicked.connect(self.delete_selected_record)
         self.main.btn_search_text.clicked.connect(self.search_in_database)
-
         # Автоматически обновляем при переходе на вкладку
         self.main.btn_database.clicked.connect(self.refresh_database)
+        # Двойной клик по строке открывает подробности
+        self.main.table_voices.cellDoubleClicked.connect(self.open_person_details)
 
     def refresh_database(self):
-        """Обновление таблицы базы данных"""
+        """Обновление таблицы базы данных (только ФИО и Дата добавления)"""
         try:
-            # Получаем все записи из БД
             all_people = self.db_manager.get_all_people()
-
-            # Настраиваем таблицу
             table = self.main.table_voices
             table.setRowCount(len(all_people))
+            table.setColumnCount(2)
+            table.setHorizontalHeaderLabels(["ФИО", "Дата добавления"])
 
-            # Заполняем таблицу данными
             for row, person in enumerate(all_people):
-                # ID (обрезаем для отображения)
-                short_id = person['id'][:8] + "..."
-                table.setItem(row, 0, QTableWidgetItem(short_id))
-                table.setItem(row, 0, QTableWidgetItem(person['id']))  # Полный ID в данных
+                table.setItem(row, 0, QTableWidgetItem(person['full_name']))
+                created_date = person['created_at'].split('T')[0]  # дата без времени
+                table.setItem(row, 1, QTableWidgetItem(created_date))
 
-                # ФИО
-                table.setItem(row, 1, QTableWidgetItem(person['full_name']))
-
-                # Дата добавления (форматируем)
-                created_date = person['created_at']
-                if 'T' in created_date:
-                    date_part = created_date.split('T')[0]
-                    time_part = created_date.split('T')[1][:8]
-                    formatted_date = f"{date_part} {time_part}"
-                else:
-                    formatted_date = created_date
-                table.setItem(row, 2, QTableWidgetItem(formatted_date))
-
-                # Биометрические данные (информация о векторе)
-                vector_info = f"Вектор: {len(person['vector_data'])}D"
-                if person.get('notes'):
-                    vector_info += f" | {person['notes']}"
-                table.setItem(row, 3, QTableWidgetItem(vector_info))
-
-            # Настраиваем заголовки таблицы
             header = table.horizontalHeader()
-            header.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)  # ID
-            header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)  # ФИО
-            header.setSectionResizeMode(2, QHeaderView.ResizeMode.ResizeToContents)  # Дата
-            header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)  # Био данные
+            header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)  # ФИО растягивается
+            header.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)  # Дата по содержимому
 
-            # Обновляем статистику
             self.update_statistics()
-
             print(f"База данных обновлена: {len(all_people)} записей")
 
         except Exception as e:
             print(f"Ошибка обновления базы данных: {e}")
             QMessageBox.warning(self.main, "Ошибка", f"Не удалось загрузить базу данных: {e}")
 
+    def open_person_details(self, row, column):
+        """Открытие окна с полной информацией о человеке"""
+        person_id = self.get_person_id_by_row(row)
+        person_data = self.db_manager.get_person_by_id(person_id)
+        if person_data:
+            dlg = PersonDetailsDialog(
+                person_data,
+                save_callback=self.save_person_data  # ← вот это главное
+            )
+            dlg.exec()
+
+    def save_person_data(self, updated_person):
+        """Сохранение изменённых данных человека (включая фото)"""
+        try:
+            person_id = updated_person["id"]
+            self.db_manager.update_person(person_id, updated_person)
+            print(f"[OK] Данные пользователя {person_id} обновлены")
+
+            # Обновить таблицу, если нужно
+            self.refresh_database()
+
+        except Exception as e:
+            print(f"Ошибка сохранения данных: {e}")
+
+
+    def get_person_id_by_row(self, row):
+        """Получение ID человека по выбранной строке"""
+        table = self.main.table_voices
+        full_name = table.item(row, 0).text()
+        person = self.db_manager.get_person_by_name(full_name)
+        return person[0]['id'] if person else None
+
     def update_statistics(self):
         """Обновление статистики базы данных"""
         try:
             stats = self.db_manager.get_statistics()
-
             self.main.label_total_records.setText(f"Всего записей: {stats['total_records']}")
             self.main.label_last_update.setText(f"Последнее обновление: {stats['last_update']}")
-
-            # Обновляем статус БД
             if stats['total_records'] > 0:
                 self.main.label_db_status.setText("Статус БД: ✅ OK")
-                self.main.label_db_status.setStyleSheet("""
-                    QLabel {
-                        color: #27AE60;
-                        font-weight: bold;
-                        padding: 5px 10px;
-                        background-color: #EAFAEE;
-                        border: 1px solid #27AE60;
-                        border-radius: 3px;
-                    }
-                """)
+                self.main.label_db_status.setStyleSheet(
+                    "color: #27AE60; font-weight: bold; padding: 5px 10px;"
+                    "background-color: #EAFAEE; border: 1px solid #27AE60; border-radius: 3px;"
+                )
             else:
                 self.main.label_db_status.setText("Статус БД: ⚠️ Пусто")
-                self.main.label_db_status.setStyleSheet("""
-                    QLabel {
-                        color: #F39C12;
-                        font-weight: bold;
-                        padding: 5px 10px;
-                        background-color: #FEF9E7;
-                        border: 1px solid #F39C12;
-                        border-radius: 3px;
-                    }
-                """)
-
+                self.main.label_db_status.setStyleSheet(
+                    "color: #F39C12; font-weight: bold; padding: 5px 10px;"
+                    "background-color: #FEF9E7; border: 1px solid #F39C12; border-radius: 3px;"
+                )
         except Exception as e:
             print(f"Ошибка обновления статистики: {e}")
 
@@ -112,15 +104,13 @@ class DatabaseController:
         try:
             table = self.main.table_voices
             selected_rows = table.selectionModel().selectedRows()
-
             if not selected_rows:
                 QMessageBox.information(self.main, "Информация", "Выберите запись для удаления")
                 return
 
             selected_row = selected_rows[0].row()
-            person_id = table.item(selected_row, 0).text()  # Получаем полный ID
+            person_id = self.get_person_id_by_row(selected_row)
 
-            # Подтверждение удаления
             reply = QMessageBox.question(
                 self.main,
                 "Подтверждение удаления",
@@ -144,48 +134,25 @@ class DatabaseController:
         """Поиск по базе данных"""
         try:
             search_text = self.main.lineEdit_search.text().strip().lower()
-
             if not search_text:
-                self.refresh_database()  # Показываем все если поиск пустой
+                self.refresh_database()
                 return
 
             all_people = self.db_manager.get_all_people()
-            filtered_people = []
+            filtered_people = [p for p in all_people if search_text in p['full_name'].lower()
+                               or search_text in p.get('notes', '').lower()]
 
-            for person in all_people:
-                # Ищем в ФИО и заметках
-                if (search_text in person['full_name'].lower() or
-                        search_text in person.get('notes', '').lower()):
-                    filtered_people.append(person)
-
-            # Обновляем таблицу с результатами поиска
             table = self.main.table_voices
             table.setRowCount(len(filtered_people))
+            table.setColumnCount(2)
+            table.setHorizontalHeaderLabels(["ФИО", "Дата добавления"])
 
             for row, person in enumerate(filtered_people):
-                short_id = person['id'][:8] + "..."
-                table.setItem(row, 0, QTableWidgetItem(short_id))
-                table.setItem(row, 0, QTableWidgetItem(person['id']))
-                table.setItem(row, 1, QTableWidgetItem(person['full_name']))
+                table.setItem(row, 0, QTableWidgetItem(person['full_name']))
+                created_date = person['created_at'].split('T')[0]
+                table.setItem(row, 1, QTableWidgetItem(created_date))
 
-                # Дата
-                created_date = person['created_at']
-                if 'T' in created_date:
-                    date_part = created_date.split('T')[0]
-                    formatted_date = date_part
-                else:
-                    formatted_date = created_date
-                table.setItem(row, 2, QTableWidgetItem(formatted_date))
-
-                # Био данные
-                vector_info = f"Вектор: {len(person['vector_data'])}D"
-                if person.get('notes'):
-                    vector_info += f" | {person['notes']}"
-                table.setItem(row, 3, QTableWidgetItem(vector_info))
-
-            # Обновляем статистику для поиска
             self.main.label_total_records.setText(f"Найдено записей: {len(filtered_people)}")
-
             if not filtered_people:
                 QMessageBox.information(self.main, "Поиск", "Записи не найдены")
 
@@ -197,8 +164,6 @@ class DatabaseController:
         """Получение ID выбранного человека"""
         table = self.main.table_voices
         selected_rows = table.selectionModel().selectedRows()
-
         if selected_rows:
-            selected_row = selected_rows[0].row()
-            return table.item(selected_row, 0).text()  # Полный ID
+            return self.get_person_id_by_row(selected_rows[0].row())
         return None

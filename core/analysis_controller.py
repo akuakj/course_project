@@ -124,6 +124,10 @@ class AnalysisController:
         if not self.current_audio_file or self.audio_data is None:
             return
         if not self.is_playing:
+            # Если аудио дошло до конца, сбрасываем позицию
+            if self.current_sample >= len(self.audio_data):
+                self.current_sample = 0
+
             self.is_playing = True
             self.stream = sd.OutputStream(
                 samplerate=self.sample_rate,

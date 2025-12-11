@@ -37,6 +37,7 @@ class TinyDBVoiceManager:
                 'full_name': full_name,
                 'audio_files': audio_files,
                 'created_at': datetime.now().isoformat(),
+                'photo': None,
                 'vector_data': vector_data,
                 'notes': notes or ""
             }
@@ -57,6 +58,16 @@ class TinyDBVoiceManager:
         """
         results = self.voice_table.search(self.query.id == person_id)
         return results[0] if results else None
+
+    def update_person_photo(self, person_id, photo_path):
+        """Обновляет путь к фото в записи пользователя"""
+        try:
+            # TinyDB ищет запись по полю 'id'
+            self.voice_table.update({'photo': photo_path}, self.query.id == person_id)
+            return True
+        except Exception as e:
+            print(f"Ошибка обновления фото: {e}")
+            return False
 
     def get_person_by_name(self, full_name):
         """
