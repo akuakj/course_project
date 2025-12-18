@@ -1,5 +1,6 @@
 import os
 import sys
+import numpy as np
 
 # Добавляем пути для импорта
 sys.path.append(os.path.dirname(__file__))
@@ -14,59 +15,63 @@ def fill_database():
     """
     print("=== ЗАПОЛНЕНИЕ БАЗЫ ДАННЫХ ===\n")
 
-    # Инициализируем компоненты
+    # Инициализация компонентов
     encoder = VoiceEncoderWrapper()
     db_manager = TinyDBVoiceManager()
 
-    # ДАННЫЕ ДЛЯ ЗАПОЛНЕНИЯ - ПРОСТО РЕДАКТИРУЙ ЭТОТ СПИСОК
+    # ДАННЫЕ ДЛЯ ЗАПОЛНЕНИЯ - редактируй по своему усмотрению
     people_data = [
         {
-            "full_name": "В. В. Путин",
-            "audio_file": "records/dataset/putin2.wav",
-            "notes": "Первый тестовый пользователь"
+            "full_name": "Лукашенко",
+            "audio_files": [
+                "records/dataset/lukashenko/lukashenko1.mp3",  # оригинальный
+                "records/dataset/lukashenko/lukashenko2.mp3",  # еще одна фраза
+                "records/dataset/lukashenko/lukashenko3.mp3",  # медленная речь
+                "records/dataset/lukashenko/lukashenko4.mp3"  # быстрая речь
+            ],
+            "notes": "--",
+            "photo": None
         },
-        {
-            "full_name": "Екатерина Альтуховна",
-            "audio_file": "records/dataset/girl2.wav",  # ИСПРАВИЛ ОПЕЧАТКУ: было "recordы"
-            "notes": "Второй тестовый пользователь"
-        },
-        # ДОБАВЛЯЙ ДАЛЬШЕ...
-        # {
-        #     "full_name": "Имя Фамилия",
-        #     "audio_file": "путь/к/файлу.wav",
-        #     "notes": "заметки"
-        # },
     ]
 
     added_count = 0
 
     for person in people_data:
         full_name = person["full_name"]
-        audio_file = person["audio_file"]
+        audio_files = person["audio_files"]
         notes = person.get("notes", "")
+        photo = person.get("photo", None)
 
         print(f"👤 Обрабатываю: {full_name}")
-        print(f"   📁 Аудио файл: {audio_file}")
+        for af in audio_files:
+            print(f"   📁 Аудио файл: {af}")
+            if not os.path.exists(af):
+                print(f"   ❌ Файл не найден: {af}")
+                continue
 
-        # Проверяем существование файла
-        if not os.path.exists(audio_file):
-            print(f"   ❌ Файл не найден: {audio_file}")
+        # Извлекаем эмбеддинги для каждого файла и усредняем
+        embeddings = []
+        for af in audio_files:
+            emb = encoder.get_voice_embedding(af)
+            if emb is not None:
+                embeddings.append(emb)
+        if not embeddings:
+            print(f"   ❌ Не удалось извлечь эмбеддинг ни для одного файла")
             continue
 
-        # Извлекаем эмбеддинг
-        embedding = encoder.get_voice_embedding(audio_file)
-
-        if embedding is None:
-            print(f"   ❌ Не удалось извлечь эмбеддинг")
-            continue
+        avg_embedding = np.mean(np.stack(embeddings), axis=0)
 
         # Добавляем в базу данных
         record_id = db_manager.add_voice_person(
             full_name=full_name,
-            audio_files=[audio_file],
-            vector_data=embedding,
+            audio_files=audio_files,
+            vector_data=avg_embedding,
             notes=notes
         )
+
+        # Если есть фото, обновляем
+        if photo:
+            db_manager.update_person(record_id, {"photo": photo})
 
         if record_id:
             print(f"   ✅ Успешно добавлен")
@@ -76,7 +81,6 @@ def fill_database():
 
     # Статистика
     stats = db_manager.get_statistics()
-
     print(f"\n=== РЕЗУЛЬТАТ ===")
     print(f"✅ Успешно добавлено: {added_count} человек")
     print(f"📊 Всего в базе: {stats['total_records']} записей")

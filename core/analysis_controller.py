@@ -5,7 +5,7 @@ import soundfile as sf
 from scipy.io.wavfile import write
 from datetime import datetime
 from PySide6.QtWidgets import QDialog, QFileDialog, QMessageBox
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, QThread, Signal
 from gui.analysis import Ui_AnalysisDialog
 import threading
 
@@ -197,6 +197,21 @@ class AnalysisController:
         analysis_window = AnalysisWindow(self.main, self.current_audio_file)
         analysis_window.exec()
 
+from core.voice_analysis_service import VoiceAnalysisService
+
+class AnalysisThread(QThread):
+    finished_signal = Signal(dict)
+    def __init__(self, audio_file):
+        super().__init__()
+        self.audio_file = audio_file
+        self.analyzer = VoiceAnalysisService()
+    def run(self):
+        try:
+            result = self.analyzer.analyze(self.audio_file)
+        except Exception as e:
+            result = {"status": "error", "message": str(e)}
+        self.finished_signal.emit(result)
+
 
 class AnalysisWindow(QDialog, Ui_AnalysisDialog):
     def __init__(self, parent=None, audio_file=None):
@@ -206,5 +221,48 @@ class AnalysisWindow(QDialog, Ui_AnalysisDialog):
         self.setWindowTitle("Анализ аудио")
         self.setFixedSize(700, 519)
         self.btn_close.clicked.connect(self.close)
-        if audio_file:
-            self.label_status.setText(f"Анализ файла: {os.path.basename(audio_file)}")
+        self.btn_save.setEnabled(False)
+
+        if not audio_file:
+            return
+
+        self.label_status.setText(f"Анализ файла: {audio_file.split('/')[-1]}")
+
+        # Показать прогресс
+        self.textEdit_results.setText("⏳ Извлекаются голосовые признаки...")
+
+        self.thread = AnalysisThread(audio_file)
+        self.thread.finished_signal.connect(self.show_result)
+        self.thread.start()
+
+    def show_result(self, result):
+        if result["status"] == "ok":
+            text = f"🎤 Анализ завершён\n"
+            text += f"👤 Найден голос: {result['best_match']['person']['full_name']}\n"
+            text += f"📊 Сходство: {result['best_match']['similarity'] * 100:.1f}%\n"
+            text += f"📈 Уверенность: {result['best_match']['confidence']}\n"
+            text += f"🧩 Сегментов проанализировано: {result['segments']}\n"
+            text += f"⏱ Время анализа: {result['analysis_time']} сек\n\n"
+            text += f"🔍 Другие совпадения:\n"
+
+            for i, (name, score) in enumerate(result["top_matches"], 1):
+                confidence = "✅" if score >= 0.7 else "⚠️" if score >= 0.6 else "❌"
+                text += f"{i}. {confidence} {name}: {score * 100:.1f}%\n"
+
+
+            self.textEdit_results.setText(text)
+            self.btn_save.setEnabled(True)
+
+        elif result["status"] == "not_found":
+            text = "❌ Голос не найден в базе.\n\n"
+            text += f"Проанализировано сегментов: {result['segments']}\n"
+            text += f"Время анализа: {result['analysis_time']} сек\n\n"
+            text += "Возможные причины:\n"
+            text += "1. Человек отсутствует в базе\n"
+            text += "2. Аудио слишком короткое\n"
+            text += "3. Сильный фоновый шум\n"
+            text += "4. Низкое качество записи"
+            self.textEdit_results.setText(text)
+
+        else:
+            self.textEdit_results.setText(f"❌ Ошибка анализа: {result.get('message', 'Неизвестная ошибка')}")

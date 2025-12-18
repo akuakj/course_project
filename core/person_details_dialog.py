@@ -44,7 +44,7 @@ class PersonDetailsDialog(QDialog):
         """)
 
         # Загрузить фото из БД, если есть
-        photo_path = self.person_data.get("photo_path")
+        photo_path = self.person_data.get("photo")
         if photo_path and os.path.exists(photo_path):
             self.set_photo(photo_path)
 
@@ -155,7 +155,7 @@ class PersonDetailsDialog(QDialog):
         self.set_photo(file_path)
 
         # Обновить путь в данных пользователя
-        self.person_data["photo_path"] = file_path
+        self.person_data["photo"] = file_path
 
         # Сохранить в БД если дана функция сохранения
         if self.save_callback:

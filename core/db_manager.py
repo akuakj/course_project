@@ -59,6 +59,19 @@ class TinyDBVoiceManager:
         results = self.voice_table.search(self.query.id == person_id)
         return results[0] if results else None
 
+    def update_person(self, person_id, updated_data):
+        """
+        Обновляет поля человека по его UUID.
+        updated_data — dict с ключами, которые нужно обновить
+        """
+        try:
+            self.voice_table.update(updated_data, self.query.id == person_id)
+            print(f"✅ Обновлены данные человека {person_id}")
+            return True
+        except Exception as e:
+            print(f"❌ Ошибка обновления человека: {e}")
+            return False
+
     def update_person_photo(self, person_id, photo_path):
         """Обновляет путь к фото в записи пользователя"""
         try:
