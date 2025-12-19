@@ -22,14 +22,14 @@ def fill_database():
     # ДАННЫЕ ДЛЯ ЗАПОЛНЕНИЯ - редактируй по своему усмотрению
     people_data = [
         {
-            "full_name": "Лукашенко",
+            "full_name": "Tyler Derden",
             "audio_files": [
-                "records/dataset/lukashenko/lukashenko1.mp3",  # оригинальный
-                "records/dataset/lukashenko/lukashenko2.mp3",  # еще одна фраза
-                "records/dataset/lukashenko/lukashenko3.mp3",  # медленная речь
-                "records/dataset/lukashenko/lukashenko4.mp3"  # быстрая речь
+                "records/dataset/tyler_derden/tayler1.wav",  # оригинальный
+                "records/dataset/tyler_derden/tayler2.wav",  # еще одна фраза
+                "records/dataset/tyler_derden/tayler3.wav",  # медленная речь
+                "records/dataset/tyler_derden/tayler4.wav"  # быстрая речь
             ],
-            "notes": "--",
+            "notes": "Почему все вокруг путают нас с тобой?",
             "photo": None
         },
     ]

@@ -23,7 +23,7 @@ class PersonDetailsDialog(QDialog):
         self.audio_output = None
 
         self.setWindowTitle("Детали записи")
-        self.setFixedSize(650, 415)  # фиксированный размер окна
+        self.setFixedSize(650, 425)  # фиксированный размер окна
 
         self.init_ui()
 
@@ -95,7 +95,9 @@ class PersonDetailsDialog(QDialog):
         info_layout.addWidget(QLabel("<b>Векторные данные:</b>"))
         vector = QTextEdit(str(self.person_data.get("vector_data", [])))
         vector.setReadOnly(True)
-        vector.setFixedHeight(100)
+        vector.setFixedHeight(60)  # ФИКСИРОВАННАЯ высота вместо 100
+        vector.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)  # Скролл при необходимости
+        vector.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         info_layout.addWidget(vector)
 
         # --- Аудиофайлы ---

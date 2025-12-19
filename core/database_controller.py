@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QTableWidgetItem, QMessageBox, QHeaderView
+from PySide6.QtWidgets import QTableWidgetItem, QMessageBox, QHeaderView, QTableWidget
 from PySide6.QtCore import Qt
 from datetime import datetime
 from .db_manager import TinyDBVoiceManager
@@ -23,9 +23,12 @@ class DatabaseController:
 
     def refresh_database(self):
         """Обновление таблицы базы данных (только ФИО и Дата добавления)"""
+
         try:
             all_people = self.db_manager.get_all_people()
             table = self.main.table_voices
+            table.setEditTriggers(QTableWidget.NoEditTriggers)  # ← ВОТ ЭТА СТРОКА
+
             table.setRowCount(len(all_people))
             table.setColumnCount(2)
             table.setHorizontalHeaderLabels(["ФИО", "Дата добавления"])
@@ -83,7 +86,21 @@ class DatabaseController:
         try:
             stats = self.db_manager.get_statistics()
             self.main.label_total_records.setText(f"Всего записей: {stats['total_records']}")
-            self.main.label_last_update.setText(f"Последнее обновление: {stats['last_update']}")
+
+            last_update = stats['last_update']
+            if last_update != 'Never':
+                try:
+                    # Парсим строку даты
+                    dt = datetime.fromisoformat(last_update.replace('Z', '+00:00'))
+                    # Форматируем как "19.12.2025 21:16"
+                    formatted_date = dt.strftime("%d.%m.%Y %H:%M")
+                    self.main.label_last_update.setText(f"Последнее обновление: {formatted_date}")
+                except (ValueError, AttributeError) as e:
+                    print(f"Ошибка форматирования даты: {e}")
+                    self.main.label_last_update.setText(f"Последнее обновление: {last_update}")
+            else:
+                self.main.label_last_update.setText("Последнее обновление: Never")
+
             if stats['total_records'] > 0:
                 self.main.label_db_status.setText("Статус БД: ✅ OK")
                 self.main.label_db_status.setStyleSheet(
