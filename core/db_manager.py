@@ -19,35 +19,30 @@ class TinyDBVoiceManager:
 
         print(f"База данных загружена: {db_path}")
 
-    def add_voice_person(self, full_name, audio_files, vector_data, notes=None):
+    def add_voice_person(self, full_name, audio_files, vector_data, notes=None, date_of_birth=None, photo=None):
         """
         Добавление человека в базу данных
         """
         try:
-            # Генерируем уникальный ID
             record_id = str(uuid.uuid4())
 
-            # Преобразуем numpy array в список для JSON
             if isinstance(vector_data, np.ndarray):
                 vector_data = vector_data.tolist()
 
-            # Создаем документ с нашим кастомным ID
             doc = {
                 'id': record_id,
                 'full_name': full_name,
                 'audio_files': audio_files,
                 'created_at': datetime.now().isoformat(),
-                'photo': None,
+                'photo': photo,
                 'vector_data': vector_data,
-                'notes': notes or ""
+                'notes': notes or "",
+                'date_of_birth': date_of_birth or ""  # ← НОВОЕ ПОЛЕ
             }
 
-            # Добавляем в базу (TinyDB сам сгенерирует числовой doc_id)
             self.voice_table.insert(doc)
-
-            print(f"✅ Добавлен: {full_name} (ID: {record_id})")
+            print(f"✅ Добавлен: {full_name}")
             return record_id
-
         except Exception as e:
             print(f"❌ Ошибка добавления {full_name}: {e}")
             return None
