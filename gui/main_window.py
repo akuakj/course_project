@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(805, 467)
+        MainWindow.resize(810, 520)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
@@ -245,9 +245,28 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_buttons.addWidget(self.btn_record_audio)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.horizontalLayout_buttons.addItem(self.horizontalSpacer)
+        self.horizontalLayout_buttons.addItem(self.horizontalSpacer_4)
+
+        self.btn_analysis_audio = QPushButton(self.layoutWidget)
+        self.btn_analysis_audio.setObjectName(u"btn_analysis_audio")
+        self.btn_analysis_audio.setStyleSheet(u"QPushButton {\n"
+"    background-color: #3498DB;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 8px 12px;\n"
+"    border-radius: 4px;\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"                background-color: #2980B9;\n"
+"                padding-left: 14px;\n"
+"            }\n"
+"")
+
+        self.horizontalLayout_buttons.addWidget(self.btn_analysis_audio)
 
         self.groupBox_file_info = QGroupBox(self.page_analysis)
         self.groupBox_file_info.setObjectName(u"groupBox_file_info")
@@ -378,35 +397,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_group.addLayout(self.horizontalLayout_control)
 
-        self.layoutWidget_2 = QWidget(self.page_analysis)
-        self.layoutWidget_2.setObjectName(u"layoutWidget_2")
-        self.layoutWidget_2.setGeometry(QRect(10, 420, 601, 45))
-        self.horizontalLayout_buttons_3 = QHBoxLayout(self.layoutWidget_2)
-        self.horizontalLayout_buttons_3.setObjectName(u"horizontalLayout_buttons_3")
-        self.horizontalLayout_buttons_3.setContentsMargins(0, 0, 0, 0)
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_buttons_3.addItem(self.horizontalSpacer_6)
-
-        self.btn_analysis_audio = QPushButton(self.layoutWidget_2)
-        self.btn_analysis_audio.setObjectName(u"btn_analysis_audio")
-        self.btn_analysis_audio.setStyleSheet(u"QPushButton {\n"
-"    background-color: #3498DB;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 8px 12px;\n"
-"    border-radius: 4px;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"                background-color: #2980B9;\n"
-"                padding-left: 14px;\n"
-"            }\n"
-"")
-
-        self.horizontalLayout_buttons_3.addWidget(self.btn_analysis_audio)
-
         self.stackedWidget.addWidget(self.page_analysis)
         self.page_database = QWidget()
         self.page_database.setObjectName(u"page_database")
@@ -445,7 +435,7 @@ class Ui_MainWindow(object):
         self.table_voices.horizontalHeader().setStretchLastSection(True)
         self.groupBox_stats = QGroupBox(self.page_database)
         self.groupBox_stats.setObjectName(u"groupBox_stats")
-        self.groupBox_stats.setGeometry(QRect(10, 400, 601, 61))
+        self.groupBox_stats.setGeometry(QRect(10, 410, 601, 61))
         self.groupBox_stats.setStyleSheet(u"QGroupBox {\n"
 "    font-weight: bold;\n"
 "    border: 1px solid #BDC3C7;\n"
@@ -603,7 +593,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -623,12 +613,12 @@ class Ui_MainWindow(object):
         self.btn_start.setText(QCoreApplication.translate("MainWindow", u"            \u27f6          ", None))
         self.btn_load_audio.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0430\u0443\u0434\u0438\u043e", None))
         self.btn_record_audio.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u0430\u0443\u0434\u0438\u043e", None))
+        self.btn_analysis_audio.setText(QCoreApplication.translate("MainWindow", u"\u0410\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
         self.groupBox_file_info.setTitle(QCoreApplication.translate("MainWindow", u"\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043e \u0444\u0430\u0439\u043b\u0435", None))
         self.label_file_name.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b \u043d\u0435 \u0432\u044b\u0431\u0440\u0430\u043d", None))
         self.btn_start_audio.setText(QCoreApplication.translate("MainWindow", u"\u25b6 ", None))
         self.btn_pause_audio.setText(QCoreApplication.translate("MainWindow", u"| |", None))
         self.btn_close_audio.setText(QCoreApplication.translate("MainWindow", u"\u2715", None))
-        self.btn_analysis_audio.setText(QCoreApplication.translate("MainWindow", u"\u0410\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
         ___qtablewidgetitem = self.table_voices.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"ID", None));
         ___qtablewidgetitem1 = self.table_voices.horizontalHeaderItem(1)

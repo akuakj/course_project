@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>805</width>
-    <height>467</height>
+    <width>810</width>
+    <height>520</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -203,7 +203,7 @@ QPushButton:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page_start">
        <widget class="QWidget" name="verticalLayoutWidget">
@@ -246,7 +246,7 @@ QPushButton:hover {
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>420</y>
+          <y>470</y>
           <width>601</width>
           <height>41</height>
          </rect>
@@ -349,7 +349,7 @@ QPushButton:hover {
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer">
+          <spacer name="horizontalSpacer_4">
            <property name="orientation">
             <enum>Qt::Orientation::Horizontal</enum>
            </property>
@@ -360,6 +360,29 @@ QPushButton:hover {
             </size>
            </property>
           </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_analysis_audio">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+                background-color: #2980B9;
+                padding-left: 14px;
+            }
+</string>
+           </property>
+           <property name="text">
+            <string>Анализировать</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>
@@ -561,54 +584,6 @@ QPushButton:disabled {
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="layoutWidget_2">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>420</y>
-          <width>601</width>
-          <height>45</height>
-         </rect>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_buttons_3">
-         <item>
-          <spacer name="horizontalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_analysis_audio">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-    background-color: #3498DB;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-QPushButton:hover {
-                background-color: #2980B9;
-                padding-left: 14px;
-            }
-</string>
-           </property>
-           <property name="text">
-            <string>Анализировать</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
       </widget>
       <widget class="QWidget" name="page_database">
        <widget class="QTableWidget" name="table_voices">
@@ -681,7 +656,7 @@ QHeaderView::section {
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>400</y>
+          <y>410</y>
           <width>601</width>
           <height>61</height>
          </rect>

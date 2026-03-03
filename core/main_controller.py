@@ -12,7 +12,7 @@ class MainController(QMainWindow, Ui_MainWindow):
 
         # Настройка окна
         self.setWindowTitle("VoiceMaxxing")
-        self.setFixedSize(805, 467)
+        self.setFixedSize(810, 490)
 
         # Инициализация контроллеров
         self.analysis_controller = AnalysisController(self)
