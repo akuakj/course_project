@@ -49,6 +49,11 @@
     background-color: #2C3E50;
     border: none;
     border-right: 1px solid #34495E;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+QPushButton:focus {
+    outline: none;
 }</string>
       </property>
       <property name="frameShape">
@@ -203,94 +208,9 @@ QPushButton:hover {
 </string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
-      <widget class="QWidget" name="page_start">
-       <widget class="QWidget" name="verticalLayoutWidget">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>591</width>
-          <height>391</height>
-         </rect>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QLabel" name="label_3">
-           <property name="styleSheet">
-            <string notr="true">font-size: 24px; font-weight: bold; color: #2C3E50; padding: 10px;
-
-</string>
-           </property>
-           <property name="text">
-            <string>Добро пожаловать!</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="styleSheet">
-            <string notr="true">font-size: 14px; color: #34495E; padding: 10px; font-weight: bold;
-
-</string>
-           </property>
-           <property name="text">
-            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Данное приложение предназначено для анализа и обработки голосовых&lt;br/&gt;данных с использованием современных алгоритмов &lt;br/&gt;машинного обучения.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;⚠️ Важное замечание:&lt;br/&gt;Данная программа является любительской разработкой и не даёт 100% &lt;br/&gt;гарантию на абсолютную точность результатов. &lt;br/&gt;&lt;br/&gt;Эффективность распознавания может варьироваться в зависимости от:&lt;br/&gt;• Качества входного аудиосигнала&lt;br/&gt;• Чистоты речи и дикции&lt;br/&gt;• Фоновых шумов и помех&lt;br/&gt;• Языковых особенностей&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="layoutWidget_4">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>470</y>
-          <width>601</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_buttons_4">
-         <item>
-          <spacer name="horizontalSpacer_8">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_start">
-           <property name="styleSheet">
-            <string notr="true">QPushButton {
-    background-color: #3498DB;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-QPushButton:hover {
-                background-color: #2980B9;
-                padding-left: 14px;
-            }
-</string>
-           </property>
-           <property name="text">
-            <string>            ⟶          </string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
+      <widget class="QWidget" name="page_start"/>
       <widget class="QWidget" name="page_analysis">
        <widget class="QWidget" name="layoutWidget">
         <property name="geometry">

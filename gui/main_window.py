@@ -40,6 +40,11 @@ class Ui_MainWindow(object):
 "    background-color: #2C3E50;\n"
 "    border: none;\n"
 "    border-right: 1px solid #34495E;\n"
+"	border-top-right-radius: 10px;\n"
+"	border-bottom-right-radius: 10px;\n"
+"}\n"
+"QPushButton:focus {\n"
+"    outline: none;\n"
 "}")
         self.menu_frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.menu_frame.setFrameShadow(QFrame.Shadow.Raised)
@@ -147,57 +152,6 @@ class Ui_MainWindow(object):
 "")
         self.page_start = QWidget()
         self.page_start.setObjectName(u"page_start")
-        self.verticalLayoutWidget = QWidget(self.page_start)
-        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(10, 10, 591, 391))
-        self.verticalLayout_4 = QVBoxLayout(self.verticalLayoutWidget)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.label_3 = QLabel(self.verticalLayoutWidget)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setStyleSheet(u"font-size: 24px; font-weight: bold; color: #2C3E50; padding: 10px;\n"
-"\n"
-"")
-
-        self.verticalLayout_4.addWidget(self.label_3)
-
-        self.label_2 = QLabel(self.verticalLayoutWidget)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setStyleSheet(u"font-size: 14px; color: #34495E; padding: 10px; font-weight: bold;\n"
-"\n"
-"")
-
-        self.verticalLayout_4.addWidget(self.label_2)
-
-        self.layoutWidget_4 = QWidget(self.page_start)
-        self.layoutWidget_4.setObjectName(u"layoutWidget_4")
-        self.layoutWidget_4.setGeometry(QRect(10, 420, 601, 41))
-        self.horizontalLayout_buttons_4 = QHBoxLayout(self.layoutWidget_4)
-        self.horizontalLayout_buttons_4.setObjectName(u"horizontalLayout_buttons_4")
-        self.horizontalLayout_buttons_4.setContentsMargins(0, 0, 0, 0)
-        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout_buttons_4.addItem(self.horizontalSpacer_8)
-
-        self.btn_start = QPushButton(self.layoutWidget_4)
-        self.btn_start.setObjectName(u"btn_start")
-        self.btn_start.setStyleSheet(u"QPushButton {\n"
-"    background-color: #3498DB;\n"
-"    color: white;\n"
-"    border: none;\n"
-"    padding: 8px 12px;\n"
-"    border-radius: 4px;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QPushButton:hover {\n"
-"                background-color: #2980B9;\n"
-"                padding-left: 14px;\n"
-"            }\n"
-"")
-
-        self.horizontalLayout_buttons_4.addWidget(self.btn_start)
-
         self.stackedWidget.addWidget(self.page_start)
         self.page_analysis = QWidget()
         self.page_analysis.setObjectName(u"page_analysis")
@@ -593,7 +547,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -606,11 +560,6 @@ class Ui_MainWindow(object):
         self.btn_analyze.setText(QCoreApplication.translate("MainWindow", u"\u0410\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435", None))
         self.btn_database.setText(QCoreApplication.translate("MainWindow", u"\u0411\u0430\u0437\u0430 \u0414\u0430\u043d\u043d\u044b\u0445", None))
         self.btn_ai.setText(QCoreApplication.translate("MainWindow", u"\u041d\u0435\u0439\u0440\u043e\u0441\u0435\u0442\u044c", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"\u0414\u043e\u0431\u0440\u043e \u043f\u043e\u0436\u0430\u043b\u043e\u0432\u0430\u0442\u044c!", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:11pt;\">\u0414\u0430\u043d\u043d\u043e\u0435 \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u0435 \u043f\u0440\u0435\u0434\u043d\u0430\u0437\u043d\u0430\u0447\u0435\u043d\u043e \u0434\u043b\u044f \u0430\u043d\u0430\u043b\u0438\u0437\u0430 \u0438 \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0438 \u0433\u043e\u043b\u043e\u0441\u043e\u0432\u044b\u0445<br/>\u0434\u0430\u043d\u043d\u044b\u0445 \u0441 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435\u043c \u0441\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0445 \u0430\u043b\u0433\u043e\u0440\u0438\u0442\u043c\u043e\u0432 <br/>\u043c\u0430\u0448\u0438\u043d\u043d\u043e\u0433\u043e \u043e\u0431\u0443\u0447\u0435\u043d\u0438\u044f.</span></p><p><span style=\" font-size:11pt;\">\u26a0\ufe0f \u0412\u0430\u0436\u043d\u043e\u0435 \u0437\u0430\u043c\u0435\u0447\u0430\u043d\u0438\u0435:<br/>\u0414\u0430\u043d\u043d\u0430\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430"
-                        " \u044f\u0432\u043b\u044f\u0435\u0442\u0441\u044f \u043b\u044e\u0431\u0438\u0442\u0435\u043b\u044c\u0441\u043a\u043e\u0439 \u0440\u0430\u0437\u0440\u0430\u0431\u043e\u0442\u043a\u043e\u0439 \u0438 \u043d\u0435 \u0434\u0430\u0451\u0442 100% <br/>\u0433\u0430\u0440\u0430\u043d\u0442\u0438\u044e \u043d\u0430 \u0430\u0431\u0441\u043e\u043b\u044e\u0442\u043d\u0443\u044e \u0442\u043e\u0447\u043d\u043e\u0441\u0442\u044c \u0440\u0435\u0437\u0443\u043b\u044c\u0442\u0430\u0442\u043e\u0432. <br/><br/>\u042d\u0444\u0444\u0435\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c \u0440\u0430\u0441\u043f\u043e\u0437\u043d\u0430\u0432\u0430\u043d\u0438\u044f \u043c\u043e\u0436\u0435\u0442 \u0432\u0430\u0440\u044c\u0438\u0440\u043e\u0432\u0430\u0442\u044c\u0441\u044f \u0432 \u0437\u0430\u0432\u0438\u0441\u0438\u043c\u043e\u0441\u0442\u0438 \u043e\u0442:<br/>\u2022 \u041a\u0430\u0447\u0435\u0441\u0442\u0432\u0430 \u0432\u0445\u043e\u0434\u043d\u043e\u0433\u043e \u0430\u0443\u0434\u0438\u043e\u0441\u0438\u0433\u043d\u0430\u043b"
-                        "\u0430<br/>\u2022 \u0427\u0438\u0441\u0442\u043e\u0442\u044b \u0440\u0435\u0447\u0438 \u0438 \u0434\u0438\u043a\u0446\u0438\u0438<br/>\u2022 \u0424\u043e\u043d\u043e\u0432\u044b\u0445 \u0448\u0443\u043c\u043e\u0432 \u0438 \u043f\u043e\u043c\u0435\u0445<br/>\u2022 \u042f\u0437\u044b\u043a\u043e\u0432\u044b\u0445 \u043e\u0441\u043e\u0431\u0435\u043d\u043d\u043e\u0441\u0442\u0435\u0439</span></p><p><br/></p></body></html>", None))
-        self.btn_start.setText(QCoreApplication.translate("MainWindow", u"            \u27f6          ", None))
         self.btn_load_audio.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044c \u0430\u0443\u0434\u0438\u043e", None))
         self.btn_record_audio.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0438\u0441\u0430\u0442\u044c \u0430\u0443\u0434\u0438\u043e", None))
         self.btn_analysis_audio.setText(QCoreApplication.translate("MainWindow", u"\u0410\u043d\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u0442\u044c", None))
