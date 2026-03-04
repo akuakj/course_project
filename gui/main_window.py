@@ -15,11 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QFrame,
-    QGroupBox, QHBoxLayout, QHeaderView, QLabel,
-    QLineEdit, QMainWindow, QProgressBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStackedWidget, QTableWidget,
-    QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGroupBox, QHBoxLayout,
+    QLabel, QLineEdit, QMainWindow, QProgressBar,
+    QPushButton, QSizePolicy, QSpacerItem, QStackedWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -354,39 +353,6 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.page_analysis)
         self.page_database = QWidget()
         self.page_database.setObjectName(u"page_database")
-        self.table_voices = QTableWidget(self.page_database)
-        if (self.table_voices.columnCount() < 4):
-            self.table_voices.setColumnCount(4)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.table_voices.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.table_voices.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.table_voices.setHorizontalHeaderItem(2, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        self.table_voices.setHorizontalHeaderItem(3, __qtablewidgetitem3)
-        self.table_voices.setObjectName(u"table_voices")
-        self.table_voices.setGeometry(QRect(10, 140, 601, 251))
-        self.table_voices.setStyleSheet(u"QTableWidget {\n"
-"    border: 1px solid #BDC3C7;\n"
-"    border-radius: 5px;\n"
-"    background-color: white;\n"
-"    alternate-background-color: #F8F9F9;\n"
-"}\n"
-"QHeaderView::section {\n"
-"    background-color: #34495E;\n"
-"    color: white;\n"
-"    padding: 8px;\n"
-"    border: none;\n"
-"    font-weight: bold;\n"
-"}")
-        self.table_voices.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContentsOnFirstShow)
-        self.table_voices.setAlternatingRowColors(True)
-        self.table_voices.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.table_voices.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-        self.table_voices.horizontalHeader().setMinimumSectionSize(50)
-        self.table_voices.horizontalHeader().setHighlightSections(False)
-        self.table_voices.horizontalHeader().setStretchLastSection(True)
         self.groupBox_stats = QGroupBox(self.page_database)
         self.groupBox_stats.setObjectName(u"groupBox_stats")
         self.groupBox_stats.setGeometry(QRect(10, 410, 601, 61))
@@ -568,14 +534,6 @@ class Ui_MainWindow(object):
         self.btn_start_audio.setText(QCoreApplication.translate("MainWindow", u"\u25b6 ", None))
         self.btn_pause_audio.setText(QCoreApplication.translate("MainWindow", u"| |", None))
         self.btn_close_audio.setText(QCoreApplication.translate("MainWindow", u"\u2715", None))
-        ___qtablewidgetitem = self.table_voices.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"ID", None));
-        ___qtablewidgetitem1 = self.table_voices.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0418\u041e", None));
-        ___qtablewidgetitem2 = self.table_voices.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0442\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u044f", None));
-        ___qtablewidgetitem3 = self.table_voices.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"\u0411\u0438\u043e. \u0434\u0430\u043d\u043d\u044b\u0435", None));
         self.groupBox_stats.setTitle(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043a\u0430 \u0431\u0430\u0437\u044b", None))
         self.label_total_records.setText(QCoreApplication.translate("MainWindow", u"\u0412\u0441\u0435\u0433\u043e \u0437\u0430\u043f\u0438\u0441\u0435\u0439: 0", None))
         self.label_last_update.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u0435\u0435 \u043e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u0438\u0435: -", None))

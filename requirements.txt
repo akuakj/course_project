@@ -2,6 +2,5 @@ PySide6==6.9.2
 numpy>=1.21.0
 sounddevice>=0.4.6
 soundfile>=0.10.3
-resemblyzer>=0.1.1
 tinydb>=4.8.0
 scipy>=1.7.0
