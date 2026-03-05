@@ -46,11 +46,10 @@
       </property>
       <property name="styleSheet">
        <string notr="true">QFrame {
-    background-color: #2C3E50;
+    background-color: #1a1f2e;
     border: none;
-    border-right: 1px solid #34495E;
-	border-top-right-radius: 10px;
-	border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 QPushButton:focus {
     outline: none;
@@ -82,11 +81,12 @@ QPushButton:focus {
         <widget class="QLabel" name="label">
          <property name="styleSheet">
           <string notr="true">QLabel {
-    color: #ECF0F1;
-    font-size: 18px;
+    color: #4a5568;
+    font-size: 11px;
     font-weight: bold;
     padding: 10px;
-    border-bottom: 1px solid #34495E;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #2d3447;
 }</string>
          </property>
          <property name="text">
@@ -98,18 +98,20 @@ QPushButton:focus {
         <widget class="QPushButton" name="btn_home">
          <property name="styleSheet">
           <string notr="true">QPushButton {
-                background-color: #3498DB;
-                color: white;
-                border: none;
-                padding: 12px;
-                text-align: center;
-                font-weight: bold;
-                font-size: 14px;
-                border-radius: 5px;  }
+    background-color: transparent;
+    color: #8892a4;
+    border: none;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 5px;
+}
 QPushButton:hover {
-                background-color: #2980B9;
-                padding-left: 15px;
-            }</string>
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    padding-left: 12px;
+}</string>
          </property>
          <property name="text">
           <string>Начало</string>
@@ -120,18 +122,20 @@ QPushButton:hover {
         <widget class="QPushButton" name="btn_analyze">
          <property name="styleSheet">
           <string notr="true">QPushButton {
-                background-color: #9B59B6;
-                color: white;
-                border: none;
-                padding: 12px;
-                text-align: center;
-                font-weight: bold;
-                font-size: 14px;
-                border-radius: 5px;
-            }
+    background-color: transparent;
+    color: #8892a4;
+    border: none;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 13px;
+    border-radius: 5px;
+}
 QPushButton:hover {
-                background-color: #8E44AD;
-                padding-left: 15px; }</string>
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    padding-left: 12px;
+}</string>
          </property>
          <property name="text">
           <string>Анализирование</string>
@@ -142,18 +146,19 @@ QPushButton:hover {
         <widget class="QPushButton" name="btn_database">
          <property name="styleSheet">
           <string notr="true">QPushButton {
-    background-color: #E74C3C;
-    color: white;
-    font-weight: bold;
+    background-color: transparent;
+    color: #8892a4;
     border: none;
     padding: 12px;
-    text-align: center;
-    font-size: 14px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 13px;
     border-radius: 5px;
 }
 QPushButton:hover {
-    background-color: #C0392B;
-    padding-left: 15px;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    padding-left: 12px;
 }</string>
          </property>
          <property name="text">
@@ -165,18 +170,19 @@ QPushButton:hover {
         <widget class="QPushButton" name="btn_ai">
          <property name="styleSheet">
           <string notr="true">QPushButton {
-    background-color: #2ECC71;
-    color: white;
-	font-weight: bold;
+    background-color: transparent;
+    color: #8892a4;
     border: none;
     padding: 12px;
-    text-align: center;
-    font-size: 14px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 13px;
     border-radius: 5px;
 }
 QPushButton:hover {
-    background-color: #27AE60;
-    padding-left: 15px;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    padding-left: 12px;
 }</string>
          </property>
          <property name="text">

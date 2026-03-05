@@ -20,8 +20,59 @@ class MainController(QMainWindow, Ui_MainWindow):
 
         self.setup_connections()
         self._setup_home_page()
+        self._setup_menu()
 
         self.stackedWidget.setCurrentIndex(0)
+        self._set_active_menu_btn(self.btn_home)
+
+    def _setup_menu(self):
+        """Настройка иконок и стилей меню"""
+        self.btn_home.setText("🏠  Начало")
+        self.btn_analyze.setText("🎙  Анализирование")
+        self.btn_database.setText("🗄  База Данных")
+        self.btn_ai.setText("🧠  Нейросеть")
+
+        self._menu_buttons = [
+            self.btn_home,
+            self.btn_analyze,
+            self.btn_database,
+            self.btn_ai,
+        ]
+
+    def _set_active_menu_btn(self, active_btn):
+        """Подсвечивает активную кнопку меню"""
+        inactive_style = """
+            QPushButton {
+                background-color: transparent;
+                color: #8892a4;
+                border: none;
+                border-left: 3px solid transparent;
+                padding: 12px;
+                text-align: left;
+                font-weight: bold;
+                font-size: 13px;
+                border-radius: 0px;
+            }
+            QPushButton:hover {
+                background-color: rgba(255, 255, 255, 0.08);
+                color: white;
+            }
+        """
+        active_style = """
+            QPushButton {
+                background-color: rgba(52, 152, 219, 0.15);
+                color: white;
+                border: none;
+                border-left: 3px solid #3498DB;
+                padding: 12px;
+                text-align: left;
+                font-weight: bold;
+                font-size: 13px;
+                border-radius: 0px;
+            }
+        """
+        for btn in self._menu_buttons:
+            btn.setStyleSheet(active_style if btn is active_btn else inactive_style)
 
     def _setup_home_page(self):
         """Перестраивает стартовую страницу через QWebEngineView"""
@@ -76,7 +127,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         margin-bottom: 8px;
     }}
     .subtitle {{
-        font-size: 14px;
+        font-size: 13px;
         color: #7F8C8D;
         margin-bottom: 20px;
         line-height: 1.5;
@@ -207,10 +258,10 @@ class MainController(QMainWindow, Ui_MainWindow):
 
     def setup_connections(self):
         """Подключение всех кнопок"""
-        self.btn_home.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(0))
-        self.btn_analyze.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(1))
-        self.btn_database.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(2))
-        self.btn_ai.clicked.connect(lambda: self.stackedWidget.setCurrentIndex(3))
+        self.btn_home.clicked.connect(lambda: [self.stackedWidget.setCurrentIndex(0), self._set_active_menu_btn(self.btn_home)])
+        self.btn_analyze.clicked.connect(lambda: [self.stackedWidget.setCurrentIndex(1), self._set_active_menu_btn(self.btn_analyze)])
+        self.btn_database.clicked.connect(lambda: [self.stackedWidget.setCurrentIndex(2), self._set_active_menu_btn(self.btn_database)])
+        self.btn_ai.clicked.connect(lambda: [self.stackedWidget.setCurrentIndex(3), self._set_active_menu_btn(self.btn_ai)])
 
         self.analysis_controller.setup_connections()
         self.database_controller.setup_connections()

@@ -36,11 +36,10 @@ class Ui_MainWindow(object):
         self.menu_frame.setMinimumSize(QSize(185, 0))
         self.menu_frame.setMaximumSize(QSize(185, 16777215))
         self.menu_frame.setStyleSheet(u"QFrame {\n"
-"    background-color: #2C3E50;\n"
+"    background-color: #1a1f2e;\n"
 "    border: none;\n"
-"    border-right: 1px solid #34495E;\n"
-"	border-top-right-radius: 10px;\n"
-"	border-bottom-right-radius: 10px;\n"
+"    border-top-right-radius: 10px;\n"
+"    border-bottom-right-radius: 10px;\n"
 "}\n"
 "QPushButton:focus {\n"
 "    outline: none;\n"
@@ -54,11 +53,12 @@ class Ui_MainWindow(object):
         self.label = QLabel(self.menu_frame)
         self.label.setObjectName(u"label")
         self.label.setStyleSheet(u"QLabel {\n"
-"    color: #ECF0F1;\n"
-"    font-size: 18px;\n"
+"    color: #4a5568;\n"
+"    font-size: 11px;\n"
 "    font-weight: bold;\n"
 "    padding: 10px;\n"
-"    border-bottom: 1px solid #34495E;\n"
+"    letter-spacing: 1px;\n"
+"    border-bottom: 1px solid #2d3447;\n"
 "}")
 
         self.verticalLayout.addWidget(self.label)
@@ -66,54 +66,59 @@ class Ui_MainWindow(object):
         self.btn_home = QPushButton(self.menu_frame)
         self.btn_home.setObjectName(u"btn_home")
         self.btn_home.setStyleSheet(u"QPushButton {\n"
-"                background-color: #3498DB;\n"
-"                color: white;\n"
-"                border: none;\n"
-"                padding: 12px;\n"
-"                text-align: center;\n"
-"                font-weight: bold;\n"
-"                font-size: 14px;\n"
-"                border-radius: 5px;  }\n"
+"    background-color: transparent;\n"
+"    color: #8892a4;\n"
+"    border: none;\n"
+"    padding: 12px;\n"
+"    text-align: left;\n"
+"    font-weight: bold;\n"
+"    font-size: 13px;\n"
+"    border-radius: 5px;\n"
+"}\n"
 "QPushButton:hover {\n"
-"                background-color: #2980B9;\n"
-"                padding-left: 15px;\n"
-"            }")
+"    background-color: rgba(255, 255, 255, 0.08);\n"
+"    color: white;\n"
+"    padding-left: 12px;\n"
+"}")
 
         self.verticalLayout.addWidget(self.btn_home)
 
         self.btn_analyze = QPushButton(self.menu_frame)
         self.btn_analyze.setObjectName(u"btn_analyze")
         self.btn_analyze.setStyleSheet(u"QPushButton {\n"
-"                background-color: #9B59B6;\n"
-"                color: white;\n"
-"                border: none;\n"
-"                padding: 12px;\n"
-"                text-align: center;\n"
-"                font-weight: bold;\n"
-"                font-size: 14px;\n"
-"                border-radius: 5px;\n"
-"            }\n"
+"    background-color: transparent;\n"
+"    color: #8892a4;\n"
+"    border: none;\n"
+"    padding: 12px;\n"
+"    text-align: left;\n"
+"    font-weight: bold;\n"
+"    font-size: 13px;\n"
+"    border-radius: 5px;\n"
+"}\n"
 "QPushButton:hover {\n"
-"                background-color: #8E44AD;\n"
-"                padding-left: 15px; }")
+"    background-color: rgba(255, 255, 255, 0.08);\n"
+"    color: white;\n"
+"    padding-left: 12px;\n"
+"}")
 
         self.verticalLayout.addWidget(self.btn_analyze)
 
         self.btn_database = QPushButton(self.menu_frame)
         self.btn_database.setObjectName(u"btn_database")
         self.btn_database.setStyleSheet(u"QPushButton {\n"
-"    background-color: #E74C3C;\n"
-"    color: white;\n"
-"    font-weight: bold;\n"
+"    background-color: transparent;\n"
+"    color: #8892a4;\n"
 "    border: none;\n"
 "    padding: 12px;\n"
-"    text-align: center;\n"
-"    font-size: 14px;\n"
+"    text-align: left;\n"
+"    font-weight: bold;\n"
+"    font-size: 13px;\n"
 "    border-radius: 5px;\n"
 "}\n"
 "QPushButton:hover {\n"
-"    background-color: #C0392B;\n"
-"    padding-left: 15px;\n"
+"    background-color: rgba(255, 255, 255, 0.08);\n"
+"    color: white;\n"
+"    padding-left: 12px;\n"
 "}")
 
         self.verticalLayout.addWidget(self.btn_database)
@@ -121,18 +126,19 @@ class Ui_MainWindow(object):
         self.btn_ai = QPushButton(self.menu_frame)
         self.btn_ai.setObjectName(u"btn_ai")
         self.btn_ai.setStyleSheet(u"QPushButton {\n"
-"    background-color: #2ECC71;\n"
-"    color: white;\n"
-"	font-weight: bold;\n"
+"    background-color: transparent;\n"
+"    color: #8892a4;\n"
 "    border: none;\n"
 "    padding: 12px;\n"
-"    text-align: center;\n"
-"    font-size: 14px;\n"
+"    text-align: left;\n"
+"    font-weight: bold;\n"
+"    font-size: 13px;\n"
 "    border-radius: 5px;\n"
 "}\n"
 "QPushButton:hover {\n"
-"    background-color: #27AE60;\n"
-"    padding-left: 15px;\n"
+"    background-color: rgba(255, 255, 255, 0.08);\n"
+"    color: white;\n"
+"    padding-left: 12px;\n"
 "}")
 
         self.verticalLayout.addWidget(self.btn_ai)
