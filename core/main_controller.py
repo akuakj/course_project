@@ -27,10 +27,10 @@ class MainController(QMainWindow, Ui_MainWindow):
 
     def _setup_menu(self):
         """Настройка иконок и стилей меню"""
-        self.btn_home.setText("🏠  Начало")
-        self.btn_analyze.setText("🎙  Анализирование")
-        self.btn_database.setText("🗄  База Данных")
-        self.btn_ai.setText("🧠  Нейросеть")
+        self.btn_home.setText("🏠  Начало".upper())
+        self.btn_analyze.setText("🎙  Анализирование".upper())
+        self.btn_database.setText("🗄  База Данных".upper())
+        self.btn_ai.setText("🧠  Нейросеть".upper())
 
         self._menu_buttons = [
             self.btn_home,

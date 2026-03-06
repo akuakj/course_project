@@ -27,7 +27,6 @@ def fill_database():
                 "records/dataset/tyler_derden/tayler1.wav",  # оригинальный
                 "records/dataset/tyler_derden/tayler2.wav",  # еще одна фраза
                 "records/dataset/tyler_derden/tayler3.wav",  # медленная речь
-                "records/dataset/tyler_derden/tayler4.wav"  # быстрая речь
             ],
             "notes": "Почему все вокруг путают нас с тобой?",
             "photo": None
