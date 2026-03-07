@@ -666,7 +666,7 @@ QPushButton:hover {
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_control_2">
          <item>
-          <widget class="QPushButton" name="btn_refresh_db">
+          <widget class="QPushButton" name="btn_add_person">
            <property name="styleSheet">
             <string notr="true">QPushButton {
     background-color: #2ECC71;
@@ -681,7 +681,7 @@ QPushButton:hover {
 }</string>
            </property>
            <property name="text">
-            <string>Обновить БД</string>
+            <string>ADD</string>
            </property>
           </widget>
          </item>
@@ -701,7 +701,7 @@ QPushButton:hover {
 }</string>
            </property>
            <property name="text">
-            <string> Удалить запись</string>
+            <string>DEL</string>
            </property>
           </widget>
          </item>
@@ -717,6 +717,26 @@ QPushButton:hover {
             </size>
            </property>
           </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btn_refresh_db">
+           <property name="styleSheet">
+            <string notr="true">QPushButton {
+    background-color: #2ECC71;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+QPushButton:hover {
+    background-color: #27AE60;
+}</string>
+           </property>
+           <property name="text">
+            <string>Обновить БД</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QLabel" name="label_db_status">

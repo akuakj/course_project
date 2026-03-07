@@ -5,6 +5,7 @@ from PySide6.QtWebChannel import QWebChannel
 from datetime import datetime
 from .db_manager import TinyDBVoiceManager
 from .person_details_dialog import PersonDetailsDialog
+from add_person_dialog import AddPersonDialog
 
 
 # ─────────────────────────────────────────────
@@ -174,6 +175,7 @@ function handleDblClick(personId) {{
         self.main.btn_delete_record.clicked.connect(self.delete_selected_record)
         self.main.btn_search_text.clicked.connect(self.search_in_database)
         self.main.btn_database.clicked.connect(self.refresh_database)
+        self.main.btn_add_person.clicked.connect(self._open_add_person)
 
     def refresh_database(self):
         """Обновление таблицы"""
@@ -196,6 +198,13 @@ function handleDblClick(personId) {{
             )
             dlg.exec()
 
+    def _open_add_person(self):
+        dlg = AddPersonDialog(
+            db_manager=self.db_manager,
+            parent=self.main,
+            on_saved=self.refresh_database
+        )
+        dlg.exec()
     def save_person_data(self, updated_person):
         """Сохранение изменённых данных человека"""
         try:

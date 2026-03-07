@@ -459,9 +459,9 @@ class Ui_MainWindow(object):
         self.horizontalLayout_control_2 = QHBoxLayout(self.layoutWidget_3)
         self.horizontalLayout_control_2.setObjectName(u"horizontalLayout_control_2")
         self.horizontalLayout_control_2.setContentsMargins(0, 0, 0, 0)
-        self.btn_refresh_db = QPushButton(self.layoutWidget_3)
-        self.btn_refresh_db.setObjectName(u"btn_refresh_db")
-        self.btn_refresh_db.setStyleSheet(u"QPushButton {\n"
+        self.btn_add_person = QPushButton(self.layoutWidget_3)
+        self.btn_add_person.setObjectName(u"btn_add_person")
+        self.btn_add_person.setStyleSheet(u"QPushButton {\n"
 "    background-color: #2ECC71;\n"
 "    color: white;\n"
 "    border: none;\n"
@@ -473,7 +473,7 @@ class Ui_MainWindow(object):
 "    background-color: #27AE60;\n"
 "}")
 
-        self.horizontalLayout_control_2.addWidget(self.btn_refresh_db)
+        self.horizontalLayout_control_2.addWidget(self.btn_add_person)
 
         self.btn_delete_record = QPushButton(self.layoutWidget_3)
         self.btn_delete_record.setObjectName(u"btn_delete_record")
@@ -494,6 +494,22 @@ class Ui_MainWindow(object):
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_control_2.addItem(self.horizontalSpacer_3)
+
+        self.btn_refresh_db = QPushButton(self.layoutWidget_3)
+        self.btn_refresh_db.setObjectName(u"btn_refresh_db")
+        self.btn_refresh_db.setStyleSheet(u"QPushButton {\n"
+"    background-color: #2ECC71;\n"
+"    color: white;\n"
+"    border: none;\n"
+"    padding: 8px 15px;\n"
+"    border-radius: 4px;\n"
+"    font-weight: bold;\n"
+"}\n"
+"QPushButton:hover {\n"
+"    background-color: #27AE60;\n"
+"}")
+
+        self.horizontalLayout_control_2.addWidget(self.btn_refresh_db)
 
         self.label_db_status = QLabel(self.layoutWidget_3)
         self.label_db_status.setObjectName(u"label_db_status")
@@ -546,8 +562,9 @@ class Ui_MainWindow(object):
         self.groupBox_search.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a \u043f\u043e \u0431\u0430\u0437\u0435", None))
         self.lineEdit_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u0438\u043c\u044f \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430...", None))
         self.btn_search_text.setText(QCoreApplication.translate("MainWindow", u" \u041d\u0430\u0439\u0442\u0438", None))
+        self.btn_add_person.setText(QCoreApplication.translate("MainWindow", u"ADD", None))
+        self.btn_delete_record.setText(QCoreApplication.translate("MainWindow", u"DEL", None))
         self.btn_refresh_db.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0411\u0414", None))
-        self.btn_delete_record.setText(QCoreApplication.translate("MainWindow", u" \u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0437\u0430\u043f\u0438\u0441\u044c", None))
         self.label_db_status.setText(QCoreApplication.translate("MainWindow", u"\u0421\u0442\u0430\u0442\u0443\u0441 \u0411\u0414: OK", None))
     # retranslateUi
 
