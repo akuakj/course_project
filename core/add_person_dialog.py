@@ -5,7 +5,7 @@ from PySide6.QtWidgets import (
     QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton,
     QTextEdit, QFrame, QListWidget, QListWidgetItem,
     QFileDialog, QLineEdit, QDateEdit, QWidget, QProgressBar,
-    QMessageBox
+    QMessageBox, QSizePolicy
 )
 from PySide6.QtGui import QPixmap, QColor
 from PySide6.QtCore import Qt, QDate, QThread, Signal
