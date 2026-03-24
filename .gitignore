@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 .venv/
 data/recent_files.json
+data/voice_database.json
