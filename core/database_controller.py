@@ -8,9 +8,8 @@ from .person_details_dialog import PersonDetailsDialog
 from add_person_dialog import AddPersonDialog
 
 
-# ─────────────────────────────────────────────
+
 #  Мост между JavaScript и Python
-# ─────────────────────────────────────────────
 class TableBridge(QObject):
     def __init__(self, controller):
         super().__init__()
@@ -28,9 +27,8 @@ class TableBridge(QObject):
         self.controller._open_details_by_id(person_id)
 
 
-# ─────────────────────────────────────────────
+
 #  Контроллер базы данных
-# ─────────────────────────────────────────────
 class DatabaseController:
     def __init__(self, main_controller):
         self.main = main_controller
@@ -101,6 +99,9 @@ class DatabaseController:
     thead tr {{
         background-color: #34495E;
         color: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }}
     thead td {{
         padding: 10px 12px;
@@ -131,7 +132,7 @@ class DatabaseController:
 <table>
     <thead>
         <tr>
-            <td style="width: 60px; text-align: center;">#</td>
+            <td style="width: 60px; text-align: center;">№</td>
             <td>ФИО</td>
             <td style="width: 130px; text-align: center;">Дата добавления</td>
         </tr>

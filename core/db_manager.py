@@ -20,9 +20,6 @@ class TinyDBVoiceManager:
         print(f"База данных загружена: {db_path}")
 
     def add_voice_person(self, full_name, audio_files, vector_data, notes=None, date_of_birth=None, photo=None):
-        """
-        Добавление человека в базу данных
-        """
         try:
             record_id = str(uuid.uuid4())
 
@@ -48,9 +45,6 @@ class TinyDBVoiceManager:
             return None
 
     def get_person_by_id(self, person_id):
-        """
-        Получение человека по нашему UUID
-        """
         results = self.voice_table.search(self.query.id == person_id)
         return results[0] if results else None
 

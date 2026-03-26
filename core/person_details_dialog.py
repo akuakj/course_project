@@ -77,7 +77,7 @@ class PersonDetailsDialog(QDialog):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        # ── ШАПКА ──────────────────────────────────────────
+        # ШАПКА
         header = QFrame()
         header.setFixedHeight(64)
         header.setStyleSheet("""
@@ -123,7 +123,7 @@ class PersonDetailsDialog(QDialog):
         header_layout.addWidget(self.edit_btn)
         main_layout.addWidget(header)
 
-        # ── ТЕЛО ───────────────────────────────────────────
+        # ТЕЛО
         body = QWidget()
         body.setStyleSheet("background-color: #F0F4F8;")
         body_layout = QHBoxLayout(body)
@@ -285,7 +285,7 @@ class PersonDetailsDialog(QDialog):
 
         main_layout.addWidget(body)
 
-        # ── НИЖНЯЯ ПАНЕЛЬ ──────────────────────────────────
+        # НИЖНЯЯ ПАНЕЛЬ
         footer = QFrame()
         footer.setFixedHeight(58)
         footer.setStyleSheet("""

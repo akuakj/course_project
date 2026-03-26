@@ -9,14 +9,14 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QPixmap, QColor
 from PySide6.QtCore import Qt, QDate, QThread, Signal
+from core.voice_encoder import VoiceEncoderWrapper
 
 
-# ─────────────────────────────────────────────
+
 #  Поток вычисления векторов
-# ─────────────────────────────────────────────
 class VectorComputeThread(QThread):
     progress_signal = Signal(int, str)
-    finished_signal = Signal(object)  # np.ndarray или None
+    finished_signal = Signal(object)
 
     def __init__(self, audio_files):
         super().__init__()
@@ -24,7 +24,7 @@ class VectorComputeThread(QThread):
 
     def run(self):
         try:
-            from core.voice_encoder import VoiceEncoderWrapper
+
             encoder = VoiceEncoderWrapper()
             embeddings = []
 
@@ -55,9 +55,8 @@ class VectorComputeThread(QThread):
             self.finished_signal.emit(None)
 
 
-# ─────────────────────────────────────────────
+
 #  Диалог добавления человека
-# ─────────────────────────────────────────────
 class AddPersonDialog(QDialog):
     def __init__(self, db_manager, parent=None, on_saved=None):
         super().__init__(parent)
@@ -117,7 +116,7 @@ class AddPersonDialog(QDialog):
         header_layout.addWidget(badge)
         main_layout.addWidget(header)
 
-        # ── ТЕЛО ───────────────────────────────
+        #ТЕЛО
         body = QWidget()
         body.setStyleSheet("background-color: #F0F4F8;")
         body_layout = QHBoxLayout(body)
@@ -313,7 +312,7 @@ class AddPersonDialog(QDialog):
         body_layout.addLayout(right_col)
         main_layout.addWidget(body)
 
-        # ── ФУТЕР ──────────────────────────────
+        # ФУТЕР
         footer = QFrame()
         footer.setFixedHeight(58)
         footer.setStyleSheet("QFrame { background-color: white; border-top: 1px solid #E2E8F0; border: none; }")
@@ -357,8 +356,7 @@ class AddPersonDialog(QDialog):
         footer_layout.addWidget(cancel_btn)
         main_layout.addWidget(footer)
 
-    # ── Вспомогательные методы ─────────────────
-
+    # Вспомогательные методы
     def _make_card(self):
         card = QFrame()
         card.setStyleSheet("""
@@ -419,8 +417,7 @@ class AddPersonDialog(QDialog):
             self.audio_list.takeItem(self.audio_list.row(item))
         self.label_audio_count.setText(f"{len(self.audio_files)} файлов")
 
-    # ── Сохранение ─────────────────────────────
-
+    # Сохранение
     def _save(self):
         name = self.input_name.text().strip()
         if not name:

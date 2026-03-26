@@ -13,11 +13,11 @@ from PySide6.QtCore import QTimer, QThread, Signal, Qt
 from PySide6.QtGui import QPainter, QColor, QPen, QPixmap, QFont
 from core.voice_analysis_service import VoiceAnalysisService
 import threading
-from db_manager import *
+from core.db_manager import TinyDBVoiceManager
+from core.person_details_dialog import PersonDetailsDialog
+from core.database_controller import DatabaseController
 
-# ─────────────────────────────────────────────
 #  Виджет визуализации звуковой волны
-# ─────────────────────────────────────────────
 class WaveformWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -79,9 +79,7 @@ class WaveformWidget(QWidget):
         painter.end()
 
 
-# ─────────────────────────────────────────────
 #  Основной контроллер анализа
-# ─────────────────────────────────────────────
 class AnalysisController:
     def __init__(self, main):
         self.main = main
@@ -100,7 +98,6 @@ class AnalysisController:
         self.recent_files = []
         self.recent_files_path = "data/recent_files.json"
         os.makedirs(self.output_dir, exist_ok=True)
-
         self._setup_analysis_page_ui()
 
     def _setup_analysis_page_ui(self):
@@ -427,9 +424,7 @@ class AnalysisController:
         return f"{m}:{s:02d}"
 
 
-# ─────────────────────────────────────────────
 #  Поток анализа
-# ─────────────────────────────────────────────
 class AnalysisThread(QThread):
     finished_signal = Signal(dict)
 
@@ -446,9 +441,8 @@ class AnalysisThread(QThread):
         self.finished_signal.emit(result)
 
 
-# ─────────────────────────────────────────────
+
 #  Окно результатов анализа
-# ─────────────────────────────────────────────
 class AnalysisWindow(QDialog):
     def __init__(self, parent=None, audio_file=None, db_manager=None):
         super().__init__(parent)
@@ -479,7 +473,7 @@ class AnalysisWindow(QDialog):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        # ── ШАПКА ──────────────────────────────
+        # ШАПКА
         header = QFrame()
         header.setFixedHeight(64)
         header.setStyleSheet("QFrame { background-color: #1a1f2e; border: none; }")
@@ -509,7 +503,7 @@ class AnalysisWindow(QDialog):
         header_layout.addWidget(self.filename_badge)
         main_layout.addWidget(header)
 
-        # ── ПРОГРЕСС БАР ───────────────────────
+        # ПРОГРЕСС БАР
         self.progress_frame = QFrame()
         self.progress_frame.setFixedHeight(36)
         self.progress_frame.setStyleSheet("QFrame { background: white; border: none; border-bottom: 1px solid #E2E8F0; }")
@@ -538,7 +532,7 @@ class AnalysisWindow(QDialog):
         progress_layout.addWidget(self.progress_bar)
         main_layout.addWidget(self.progress_frame)
 
-        # ── ТЕЛО ───────────────────────────────
+        # ТЕЛО
         body = QWidget()
         body.setStyleSheet("background: #F0F4F8;")
         body_layout = QHBoxLayout(body)
@@ -656,7 +650,7 @@ class AnalysisWindow(QDialog):
         body_layout.addLayout(right)
         main_layout.addWidget(body)
 
-        # ── ФУТЕР ──────────────────────────────
+        # ФУТЕР
         footer = QFrame()
         footer.setFixedHeight(58)
         footer.setStyleSheet("QFrame { background: white; border-top: 1px solid #E2E8F0; border: none; }")
@@ -873,8 +867,6 @@ class AnalysisWindow(QDialog):
     def _open_person(self, name):
         if not self.db_manager:
             return
-        from core.person_details_dialog import PersonDetailsDialog
-        from core.database_controller import DatabaseController
 
         people = self.db_manager.get_all_people()
         person = next((p for p in people if p['full_name'] == name), None)

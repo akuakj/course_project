@@ -3,18 +3,19 @@ import numpy as np
 import soundfile as sf
 from core.voice_encoder import VoiceEncoderWrapper
 from core.db_manager import TinyDBVoiceManager
-
-
+from config import (
+    STRONG_THRESHOLD, WEAK_THRESHOLD, MIN_SIMILARITY,
+    SEGMENT_SEC, SEGMENT_OVERLAP, SILENCE_THRESHOLD,
+    SIMILARITY_PERCENTILE )
 class VoiceAnalysisService:
 
     def __init__(self):
         self.encoder = VoiceEncoderWrapper()
         self.db = TinyDBVoiceManager()
 
-        # Пороги (их потом можно тюнить)
-        self.STRONG_THRESHOLD = 0.72  # было 0.85
-        self.WEAK_THRESHOLD = 0.65  # было 0.75
-        self.MIN_SIMILARITY = 0.50  # новый: минимальный порог
+        self.STRONG_THRESHOLD = STRONG_THRESHOLD
+        self.WEAK_THRESHOLD = WEAK_THRESHOLD
+        self.MIN_SIMILARITY = MIN_SIMILARITY
 
     def analyze(self, audio_file):
         start_time = time.time()
@@ -25,10 +26,10 @@ class VoiceAnalysisService:
         except Exception as e:
             return {"status": "error", "message": f"Не удалось прочитать аудио: {e}"}
 
-        # УЛУЧШЕННАЯ сегментация с перекрытием
-        segments = self._split_audio_with_overlap(audio, sr, segment_sec=3.0, overlap=0.4)
-        if not segments:
-            return self._error("Аудио слишком короткое")
+
+        segments = self._split_audio_with_overlap(
+            audio, sr, segment_sec=SEGMENT_SEC, overlap=SEGMENT_OVERLAP)
+
 
         # Извлекаем эмбеддинги для ВСЕХ сегментов
         embeddings = []
@@ -49,7 +50,16 @@ class VoiceAnalysisService:
             return self._not_found(len(embeddings), start_time)
 
         best_person_name, best_score = max(similarities.items(), key=lambda x: x[1])
-        confidence = self._confidence(best_score)
+
+        sorted_scores = sorted(similarities.values(), reverse=True)
+        gap = sorted_scores[0] - sorted_scores[1] if len(sorted_scores) > 1 else 1.0
+
+        if gap < 0.05:
+            confidence = 'низкая'
+        elif gap < 0.10:
+            confidence = 'средняя'
+        else:
+            confidence = self._confidence(best_score)
 
         # Формируем топ-5 совпадений
         top_matches = sorted(
@@ -70,8 +80,6 @@ class VoiceAnalysisService:
             "analysis_time": round(time.time() - start_time, 2)
         }
 
-    # ================= ВСПОМОГАТЕЛЬНО =================
-
     def _split_audio(self, audio, sr, segment_sec=2.0):
         step = int(sr * segment_sec)
         return [audio[i:i+step] for i in range(0, len(audio), step) if len(audio[i:i+step]) > step // 2]
@@ -85,12 +93,7 @@ class VoiceAnalysisService:
             results[person["full_name"]] = float(np.mean(sims))
         return results
 
-    def _split_audio_with_overlap(self, audio, sr, segment_sec=3.0, overlap=0.4):
-        """
-        Сегментация с перекрытием для лучшего охвата голоса
-        segment_sec: длина сегмента в секундах (рекомендуется 3.0)
-        overlap: процент перекрытия (0.4 = 40%)
-        """
+    def _split_audio_with_overlap(self, audio, sr, segment_sec=SEGMENT_SEC, overlap=SEGMENT_OVERLAP):
         segment_samples = int(sr * segment_sec)
         step_samples = int(segment_samples * (1 - overlap))
 
@@ -104,15 +107,13 @@ class VoiceAnalysisService:
             segment = audio[i:i + segment_samples]
 
             # Фильтруем слишком тихие сегменты
-            if np.max(np.abs(segment)) > 0.02:  # порог громкости
+            if np.max(np.abs(segment)) > SILENCE_THRESHOLD:  # порог громкости
                 segments.append(segment)
 
         return segments if segments else [audio[:segment_samples]]
 
+
     def _advanced_compare_with_db(self, embeddings):
-        """
-        Улучшенное сравнение с учетом нескольких сегментов
-        """
         people = self.db.get_all_people()
         results = {}
 
@@ -128,13 +129,7 @@ class VoiceAnalysisService:
             if not segment_similarities:
                 continue
 
-            # СТРАТЕГИЯ: используем 90-й ПЕРЦЕНТИЛЬ (устойчив к шумным сегментам)
-            # Это лучше, чем среднее или максимум
-            similarity_score = np.percentile(segment_similarities, 85)
-
-            # Альтернативная стратегия: среднее по лучшим 3 сегментам
-            # top_3 = sorted(segment_similarities, reverse=True)[:3]
-            # similarity_score = np.mean(top_3) if top_3 else 0
+            similarity_score = np.percentile(segment_similarities, SIMILARITY_PERCENTILE)
 
             if similarity_score >= self.MIN_SIMILARITY:
                 results[person["full_name"]] = float(similarity_score)
@@ -169,5 +164,6 @@ class VoiceAnalysisService:
         return {
             "status": "not_found",
             "segments": segments,
+            "top_matches": [],
             "analysis_time": round(time.time() - start_time, 2)
         }
