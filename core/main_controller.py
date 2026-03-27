@@ -3,7 +3,7 @@ from gui.main_window import Ui_MainWindow
 from core.analysis_controller import AnalysisController
 from core.database_controller import DatabaseController
 from core.ai_controller import AIController
-
+from core.db_manager import TinyDBVoiceManager
 
 class MainController(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -12,6 +12,8 @@ class MainController(QMainWindow, Ui_MainWindow):
 
         self.setWindowTitle("VoiceMaxxing")
         self.setFixedSize(810, 490)
+
+        self.db_manager = TinyDBVoiceManager()
 
         # Инициализация контроллеров
         self.analysis_controller = AnalysisController(self)

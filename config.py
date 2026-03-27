@@ -7,7 +7,16 @@
 #   1.0 — идентичные голоса
 #   0.0 — абсолютно разные голоса
 # Значения подобраны экспериментально на основе тестовой выборки.
+import os
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+PHOTOS_DIR = os.path.join(BASE_DIR, "resources", "photos")
+AUDIO_DIR = os.path.join(BASE_DIR, "records", "audioset")
+
+# Создаём папки если не существуют
+os.makedirs(PHOTOS_DIR, exist_ok=True)
+os.makedirs(AUDIO_DIR, exist_ok=True)
 
 # Порог уверенной идентификации (высокая уверенность)
 STRONG_THRESHOLD = 0.72

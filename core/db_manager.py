@@ -3,13 +3,26 @@ from datetime import datetime
 from tinydb import TinyDB, Query
 import uuid
 import numpy as np
+from config import BASE_DIR
 
+
+
+def to_relative_path(absolute_path):
+    try:
+        return os.path.relpath(absolute_path, BASE_DIR)
+    except ValueError:
+        return absolute_path
+
+def to_absolute_path(relative_path):
+    if relative_path and not os.path.isabs(relative_path):
+        return os.path.join(BASE_DIR, relative_path)
+    return relative_path
 
 class TinyDBVoiceManager:
-    def __init__(self, db_path="data/voice_database.json"):
-        """
-        Инициализация менеджера TinyDB
-        """
+    def __init__(self, db_path=None):
+        if db_path is None:
+            db_path = os.path.join(BASE_DIR, "data", "voice_database.json")
+
         # Создаем папку data если её нет
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
 
@@ -18,6 +31,13 @@ class TinyDBVoiceManager:
         self.query = Query()
 
         print(f"База данных загружена: {db_path}")
+
+    def _normalize_person(self, person):
+        if person.get('photo'):
+            person['photo'] = to_absolute_path(person['photo'])
+        if person.get('audio_files'):
+            person['audio_files'] = [to_absolute_path(f) for f in person['audio_files']]
+        return person
 
     def add_voice_person(self, full_name, audio_files, vector_data, notes=None, date_of_birth=None, photo=None):
         try:
@@ -29,9 +49,9 @@ class TinyDBVoiceManager:
             doc = {
                 'id': record_id,
                 'full_name': full_name,
-                'audio_files': audio_files,
+                'audio_files': [to_relative_path(f) for f in audio_files],
                 'created_at': datetime.now().isoformat(),
-                'photo': photo,
+                'photo': to_relative_path(photo) if photo else None,
                 'vector_data': vector_data,
                 'notes': notes or "",
                 'date_of_birth': date_of_birth or ""  # ← НОВОЕ ПОЛЕ
@@ -46,14 +66,15 @@ class TinyDBVoiceManager:
 
     def get_person_by_id(self, person_id):
         results = self.voice_table.search(self.query.id == person_id)
-        return results[0] if results else None
+        return self._normalize_person(results[0]) if results else None
 
     def update_person(self, person_id, updated_data):
-        """
-        Обновляет поля человека по его UUID.
-        updated_data — dict с ключами, которые нужно обновить
-        """
         try:
+            if updated_data.get('photo'):
+                updated_data['photo'] = to_relative_path(updated_data['photo'])
+            if updated_data.get('audio_files'):
+                updated_data['audio_files'] = [to_relative_path(f) for f in updated_data['audio_files']]
+
             self.voice_table.update(updated_data, self.query.id == person_id)
             print(f"✅ Обновлены данные человека {person_id}")
             return True
@@ -65,7 +86,8 @@ class TinyDBVoiceManager:
         """Обновляет путь к фото в записи пользователя"""
         try:
             # TinyDB ищет запись по полю 'id'
-            self.voice_table.update({'photo': photo_path}, self.query.id == person_id)
+            relative_path = to_relative_path(photo_path)
+            self.voice_table.update({'photo': relative_path}, self.query.id == person_id)
             return True
         except Exception as e:
             print(f"Ошибка обновления фото: {e}")
@@ -81,7 +103,7 @@ class TinyDBVoiceManager:
         """
         Получение всех записей из базы данных
         """
-        return self.voice_table.all()
+        return [self._normalize_person(p) for p in self.voice_table.all()]
 
     def search_similar_voices(self, query_vector, top_k=5, similarity_threshold=0.7):
         """

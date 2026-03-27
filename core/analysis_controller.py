@@ -83,6 +83,7 @@ class WaveformWidget(QWidget):
 class AnalysisController:
     def __init__(self, main):
         self.main = main
+        self.db_manager = main.db_manager
         self.current_audio_file = None
         self.is_playing = False
         self.is_recording = False
@@ -220,7 +221,8 @@ class AnalysisController:
     def stop_recording(self):
         self.is_recording = False
         if self.recording_thread is not None:
-            self.recording_thread.join()
+            self.recording_thread.join(timeout=3)
+            self.recording_thread = None
 
         self.main.btn_record_audio.setText("Записать аудио")
         self.main.btn_record_audio.setStyleSheet("""
@@ -322,7 +324,7 @@ class AnalysisController:
             if os.path.exists(self.recent_files_path):
                 with open(self.recent_files_path, "r", encoding="utf-8") as f:
                     loaded = json.load(f)
-                self.recent_files = [f for f in loaded if os.path.exists(f)][:5]
+                self.recent_files = [f for f in loaded if os.path.exists(f)][:2]
                 self._refresh_recent_list()
         except Exception as e:
             print(f"Ошибка загрузки recent файлов: {e}")
@@ -414,7 +416,7 @@ class AnalysisController:
         if not self.current_audio_file:
             QMessageBox.warning(self.main, "Внимание!", "Сначала загрузите или запишите аудио файл!")
             return
-        analysis_window = AnalysisWindow(self.main, self.current_audio_file, db_manager=self.main.database_controller.db_manager)
+        analysis_window = AnalysisWindow(self.main, self.current_audio_file, db_manager=self.main.db_manager)
         analysis_window.exec()
 
     @staticmethod
@@ -448,6 +450,7 @@ class AnalysisWindow(QDialog):
         super().__init__(parent)
         self.db_manager = db_manager
         self.audio_file = audio_file
+        self.thread = None
         self.setWindowTitle("Анализ аудио")
         self.setFixedSize(720, 560)
         self.setStyleSheet("""
@@ -462,6 +465,12 @@ class AnalysisWindow(QDialog):
             QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; }
             QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; }
         """)
+
+        def closeEvent(self, event):
+            if self.thread and self.thread.isRunning():
+                self.thread.quit()
+                self.thread.wait(3000)
+            event.accept()
 
         self._init_ui()
 

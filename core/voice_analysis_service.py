@@ -7,8 +7,8 @@ from config import (
     STRONG_THRESHOLD, WEAK_THRESHOLD, MIN_SIMILARITY,
     SEGMENT_SEC, SEGMENT_OVERLAP, SILENCE_THRESHOLD,
     SIMILARITY_PERCENTILE )
-class VoiceAnalysisService:
 
+class VoiceAnalysisService:
     def __init__(self):
         self.encoder = VoiceEncoderWrapper()
         self.db = TinyDBVoiceManager()

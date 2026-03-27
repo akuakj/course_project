@@ -32,7 +32,7 @@ class TableBridge(QObject):
 class DatabaseController:
     def __init__(self, main_controller):
         self.main = main_controller
-        self.db_manager = TinyDBVoiceManager()
+        self.db_manager = main_controller.db_manager
         self.selected_person_id = None
         self._all_people = []
 
