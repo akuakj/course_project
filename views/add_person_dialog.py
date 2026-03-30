@@ -9,7 +9,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtGui import QPixmap, QColor
 from PySide6.QtCore import Qt, QDate, QThread, Signal
-from core.voice_encoder import VoiceEncoderWrapper
+from services.voice_encoder import VoiceEncoderWrapper
 
 
 

@@ -11,11 +11,11 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import QTimer, QThread, Signal, Qt
 from PySide6.QtGui import QPainter, QColor, QPen, QPixmap, QFont
-from core.voice_analysis_service import VoiceAnalysisService
+from services.voice_analysis_service import VoiceAnalysisService
 import threading
-from core.db_manager import TinyDBVoiceManager
-from core.person_details_dialog import PersonDetailsDialog
-from core.database_controller import DatabaseController
+from services.db_manager import TinyDBVoiceManager
+from views.person_details_dialog import PersonDetailsDialog
+from controllers.database_controller import DatabaseController
 
 #  Виджет визуализации звуковой волны
 class WaveformWidget(QWidget):

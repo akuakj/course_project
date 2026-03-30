@@ -5,7 +5,6 @@ from PySide6.QtWidgets import (
     QPushButton, QFrame, QSlider, QScrollArea, QGridLayout
 )
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QColor
 import config
 
 

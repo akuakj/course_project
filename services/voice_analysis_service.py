@@ -1,8 +1,8 @@
 import time
 import numpy as np
 import soundfile as sf
-from core.voice_encoder import VoiceEncoderWrapper
-from core.db_manager import TinyDBVoiceManager
+from services.voice_encoder import VoiceEncoderWrapper
+from services.db_manager import TinyDBVoiceManager
 from config import (
     STRONG_THRESHOLD, WEAK_THRESHOLD, MIN_SIMILARITY,
     SEGMENT_SEC, SEGMENT_OVERLAP, SILENCE_THRESHOLD,

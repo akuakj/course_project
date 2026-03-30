@@ -3,8 +3,6 @@ __pycache__/
 **/__pycache__/
 *.pyc
 .venv/
-data/recent_files.json
-records/audioset/
+data/
 records/
 resources/
-data/voice_database.json

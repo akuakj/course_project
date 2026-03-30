@@ -3,9 +3,9 @@ from PySide6.QtCore import Qt, QObject, Slot
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebChannel import QWebChannel
 from datetime import datetime
-from .db_manager import TinyDBVoiceManager
-from .person_details_dialog import PersonDetailsDialog
-from add_person_dialog import AddPersonDialog
+from services.db_manager import TinyDBVoiceManager
+from views.person_details_dialog import PersonDetailsDialog
+from views.add_person_dialog import AddPersonDialog
 
 
 
