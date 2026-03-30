@@ -6,7 +6,7 @@ from core.db_manager import TinyDBVoiceManager
 from config import (
     STRONG_THRESHOLD, WEAK_THRESHOLD, MIN_SIMILARITY,
     SEGMENT_SEC, SEGMENT_OVERLAP, SILENCE_THRESHOLD,
-    SIMILARITY_PERCENTILE )
+    SIMILARITY_PERCENTILE, MIN_AUDIO_DURATION )
 
 class VoiceAnalysisService:
     def __init__(self):
@@ -26,7 +26,12 @@ class VoiceAnalysisService:
         except Exception as e:
             return {"status": "error", "message": f"Не удалось прочитать аудио: {e}"}
 
-
+        duration_sec = len(audio) / sr
+        if duration_sec < MIN_AUDIO_DURATION:
+            return {
+                "status": "error",
+                "message": f"Аудио слишком короткое ({duration_sec:.1f} сек). Минимум {MIN_AUDIO_DURATION:.0f} секунды."
+            }
         segments = self._split_audio_with_overlap(
             audio, sr, segment_sec=SEGMENT_SEC, overlap=SEGMENT_OVERLAP)
 

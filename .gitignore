@@ -5,4 +5,6 @@ __pycache__/
 .venv/
 data/recent_files.json
 records/audioset/
+records/
+resources/
 data/voice_database.json

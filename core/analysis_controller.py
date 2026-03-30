@@ -100,6 +100,7 @@ class AnalysisController:
         self.recent_files_path = "data/recent_files.json"
         os.makedirs(self.output_dir, exist_ok=True)
         self._setup_analysis_page_ui()
+        self._analysis_running = False
 
     def _setup_analysis_page_ui(self):
         page = self.main.page_analysis
@@ -416,8 +417,15 @@ class AnalysisController:
         if not self.current_audio_file:
             QMessageBox.warning(self.main, "Внимание!", "Сначала загрузите или запишите аудио файл!")
             return
+
+        if hasattr(self, "_analysis_running") and self._analysis_running:
+            QMessageBox.information(self.main, "Внимание", "Анализ уже выполняется!")
+            return
+
+        self._analysis_running = True
         analysis_window = AnalysisWindow(self.main, self.current_audio_file, db_manager=self.main.db_manager)
         analysis_window.exec()
+        self._analysis_running = False
 
     @staticmethod
     def _fmt_time(seconds: float) -> str:
