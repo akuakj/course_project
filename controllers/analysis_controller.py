@@ -16,6 +16,7 @@ import threading
 from services.db_manager import TinyDBVoiceManager
 from views.person_details_dialog import PersonDetailsDialog
 from controllers.database_controller import DatabaseController
+from config import STRONG_THRESHOLD, WEAK_THRESHOLD
 
 #  Виджет визуализации звуковой волны
 class WaveformWidget(QWidget):
@@ -438,10 +439,10 @@ class AnalysisController:
 class AnalysisThread(QThread):
     finished_signal = Signal(dict)
 
-    def __init__(self, audio_file):
+    def __init__(self, audio_file, db_manager = None):
         super().__init__()
         self.audio_file = audio_file
-        self.analyzer = VoiceAnalysisService()
+        self.analyzer = VoiceAnalysisService(db_manager=db_manager)
 
     def run(self):
         try:
@@ -474,16 +475,19 @@ class AnalysisWindow(QDialog):
             QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; }
         """)
 
-        def closeEvent(self, event):
-            if self.thread and self.thread.isRunning():
-                self.thread.quit()
-                self.thread.wait(3000)
-            event.accept()
-
         self._init_ui()
 
         if audio_file:
             self._start_analysis()
+
+    def closeEvent(self, event):
+            if self.thread and self.thread.isRunning():
+                self.thread.quit()
+                self.thread.wait(3000)
+                if self.thread.isRunning():
+                    self.thread.terminate()
+                    self.thread.wait(1000)
+            event.accept()
 
     def _init_ui(self):
         main_layout = QVBoxLayout(self)
@@ -700,7 +704,10 @@ class AnalysisWindow(QDialog):
         self._build_spectrogram()
 
         # Запускаем анализ в потоке
-        self.thread = AnalysisThread(self.audio_file)
+        self.thread = AnalysisThread(
+            self.audio_file,
+            db_manager=self.db_manager)
+        
         self.thread.finished_signal.connect(self._show_result)
         self.thread.start()
 
@@ -847,9 +854,9 @@ class AnalysisWindow(QDialog):
         name_label.setStyleSheet(f"color: {'#065F46' if is_best else '#1E293B'}; font-size: 13px; font-weight: {'bold' if is_best else 'normal'}; background: transparent; border: none;")
 
         pct = score * 100
-        if pct >= 72:
+        if score >= STRONG_THRESHOLD:
             score_color = "#10B981"
-        elif pct >= 65:
+        elif score >= WEAK_THRESHOLD:
             score_color = "#F59E0B"
         else:
             score_color = "#EF4444"

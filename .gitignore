@@ -6,3 +6,5 @@ __pycache__/
 data/
 records/
 resources/
+script.py
+project_dump.txt

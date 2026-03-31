@@ -9,9 +9,9 @@ from config import (
     SIMILARITY_PERCENTILE, MIN_AUDIO_DURATION )
 
 class VoiceAnalysisService:
-    def __init__(self):
+    def __init__(self, db_manager = None):
         self.encoder = VoiceEncoderWrapper()
-        self.db = TinyDBVoiceManager()
+        self.db = db_manager if db_manager is not None else TinyDBVoiceManager()
 
         self.STRONG_THRESHOLD = STRONG_THRESHOLD
         self.WEAK_THRESHOLD = WEAK_THRESHOLD
