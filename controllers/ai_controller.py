@@ -1,10 +1,10 @@
-import json
 import numpy as np
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
-    QPushButton, QFrame, QSlider, QScrollArea, QGridLayout
+    QPushButton, QFrame, QSlider, QScrollArea, QGridLayout, QMessageBox
 )
 from PySide6.QtCore import Qt
+from services.settings_manager import save_thresholds, get_thresholds
 import config
 
 
@@ -102,9 +102,15 @@ class AIController:
         matrix_header_row.addWidget(self.refresh_btn)
         matrix_layout.addLayout(matrix_header_row)
 
+        strong, weak, min_sim = get_thresholds()
+
         # Легенда
         legend_row = QHBoxLayout()
-        for color, text in [("#10B981", "≥ 0.72 высокая"), ("#F59E0B", "0.65–0.72 средняя"), ("#EF4444", "< 0.65 низкая")]:
+        for color, text in [
+            ("#10B981", f"≥ {strong:.2f} высокая"), 
+            ("#F59E0B", f"{weak:.2f}–{strong:.2f} средняя"), 
+            ("#EF4444", f"< {weak:.2f} низкая")]:
+
             dot = QLabel("●")
             dot.setStyleSheet(f"color: {color}; font-size: 13px;")
             lbl = QLabel(text)
@@ -170,7 +176,6 @@ class AIController:
         return row
 
     def _save_thresholds(self):
-        from PySide6.QtWidgets import QMessageBox
         try:
             strong = self.slider_strong.value() / 100
             weak = self.slider_weak.value() / 100
@@ -184,18 +189,10 @@ class AIController:
                 )
                 return
 
-            # Читаем config.py и перезаписываем значения
-            config_path = "config.py"
-            with open(config_path, "r", encoding="utf-8") as f:
-                content = f.read()
-
-            import re
-            content = re.sub(r"STRONG_THRESHOLD\s*=\s*[\d.]+", f"STRONG_THRESHOLD = {strong}", content)
-            content = re.sub(r"WEAK_THRESHOLD\s*=\s*[\d.]+", f"WEAK_THRESHOLD = {weak}", content)
-            content = re.sub(r"MIN_SIMILARITY\s*=\s*[\d.]+", f"MIN_SIMILARITY = {min_sim}", content)
-
-            with open(config_path, "w", encoding="utf-8") as f:
-                f.write(content)
+            success = save_thresholds(strong, weak, min_sim)
+            if not success:
+                QMessageBox.critical(self.main, "Ошибка", "Не удалось сохранить настройки")
+                return
 
             # Обновляем значения в памяти
             config.STRONG_THRESHOLD = strong

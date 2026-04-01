@@ -1,12 +1,13 @@
 import sys
 import os
 from PySide6.QtWidgets import QApplication
+from controllers.main_controller import MainController
 
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'gui'))
 sys.path.append(os.path.join(os.path.dirname(__file__), 'core'))
 
-from controllers.main_controller import MainController
+
 
 
 def main():

@@ -7,6 +7,7 @@
 # Значения подобраны экспериментально на основе тестовой выборки.
 
 import os
+from services.settings_manager import get_thresholds
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -17,14 +18,7 @@ AUDIO_DIR = os.path.join(BASE_DIR, "records", "audioset")
 os.makedirs(PHOTOS_DIR, exist_ok=True)
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
-# Порог уверенной идентификации (высокая уверенность)
-STRONG_THRESHOLD = 0.88
-
-# Порог допустимой идентификации (средняя уверенность)
-WEAK_THRESHOLD = 0.79
-
-# Минимальный порог для попадания в список кандидатов
-MIN_SIMILARITY = 0.68
+STRONG_THRESHOLD, WEAK_THRESHOLD, MIN_SIMILARITY = get_thresholds()
 
 MIN_AUDIO_DURATION = 2.0
 
