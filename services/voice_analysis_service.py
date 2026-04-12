@@ -1,7 +1,7 @@
 import time
 import numpy as np
 import soundfile as sf
-from services.voice_encoder import VoiceEncoderWrapper
+from services.encoder_factory import create_encoder
 from services.db_manager import TinyDBVoiceManager
 from config import (
     STRONG_THRESHOLD, WEAK_THRESHOLD, MIN_SIMILARITY,
@@ -10,14 +10,14 @@ from config import (
 
 class VoiceAnalysisService:
     def __init__(self, db_manager = None):
-        self.encoder = VoiceEncoderWrapper()
+        self.encoder = create_encoder()
         self.db = db_manager if db_manager is not None else TinyDBVoiceManager()
 
         self.STRONG_THRESHOLD = STRONG_THRESHOLD
         self.WEAK_THRESHOLD = WEAK_THRESHOLD
         self.MIN_SIMILARITY = MIN_SIMILARITY
 
-    def analyze(self, audio_file):
+    def analyze(self, audio_file: str) -> dict:
         start_time = time.time()
         try:
             audio, sr = sf.read(audio_file)
@@ -39,14 +39,14 @@ class VoiceAnalysisService:
         # Извлекаем эмбеддинги для ВСЕХ сегментов
         embeddings = []
         for segment in segments:
-            emb = self.encoder.get_embedding_from_audio(segment, sr)
+            emb = self.encoder.get_embedding(segment, sr)
             if emb is not None:
                 embeddings.append(emb)
 
         if not embeddings:
             return self._error("Не удалось извлечь голос")
 
-        print(f"📊 Извлечено {len(embeddings)} сегментов")
+        print(f"📊[VoiceAnalysisService] Извлечено {len(embeddings)} сегментов")
 
         # УЛУЧШЕННОЕ сравнение с базой
         similarities = self._advanced_compare_with_db(embeddings)
@@ -98,10 +98,10 @@ class VoiceAnalysisService:
             results[person["full_name"]] = float(np.mean(sims))
         return results
 
-    def _split_audio_with_overlap(self, audio, sr, segment_sec=SEGMENT_SEC, overlap=SEGMENT_OVERLAP):
+    def _split_audio_with_overlap(self, audio: np.ndarray, sr: int, segment_sec: float = SEGMENT_SEC, overlap: float = SEGMENT_OVERLAP) -> list[np.ndarray]:
         segment_samples = int(sr * segment_sec)
         step_samples = int(segment_samples * (1 - overlap))
-
+               
         segments = []
 
         # Если аудио короче сегмента, возвращаем целиком
@@ -118,7 +118,7 @@ class VoiceAnalysisService:
         return segments if segments else [audio[:segment_samples]]
 
 
-    def _advanced_compare_with_db(self, embeddings):
+    def _advanced_compare_with_db(self, embeddings: list[np.ndarray]) -> dict: 
         people = self.db.get_all_people()
         results = {}
 
@@ -141,7 +141,7 @@ class VoiceAnalysisService:
 
         return results
 
-    def _cosine_similarity(self, a, b):
+    def _cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
         """Вычисление косинусного сходства"""
         dot_product = np.dot(a, b)
         norm_a = np.linalg.norm(a)
@@ -152,7 +152,7 @@ class VoiceAnalysisService:
 
         return float(dot_product / (norm_a * norm_b))
 
-    def _confidence(self, score):
+    def _confidence(self, score: float) -> str:
         """Определение уверенности в результате"""
         if score >= self.STRONG_THRESHOLD:
             return "высокая"
@@ -162,10 +162,10 @@ class VoiceAnalysisService:
             return "низкая"
         return "очень низкая"
 
-    def _error(self, msg):
+    def _error(self, msg: str) -> dict:
         return {"status": "error", "message": msg}
 
-    def _not_found(self, segments, start_time):
+    def _not_found(self, segments: int, start_time: float) -> dict:
         return {
             "status": "not_found",
             "segments": segments,

@@ -5,11 +5,11 @@ from PySide6.QtWidgets import (
     QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton,
     QTextEdit, QFrame, QListWidget, QListWidgetItem,
     QFileDialog, QLineEdit, QDateEdit, QWidget, QProgressBar,
-    QMessageBox, QSizePolicy
+    QMessageBox
 )
-from PySide6.QtGui import QPixmap, QColor
+from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt, QDate, QThread, Signal
-from services.voice_encoder import VoiceEncoderWrapper
+from services.encoder_factory import create_encoder
 
 
 
@@ -17,41 +17,55 @@ from services.voice_encoder import VoiceEncoderWrapper
 class VectorComputeThread(QThread):
     progress_signal = Signal(int, str)
     finished_signal = Signal(object)
-
-    def __init__(self, audio_files):
+ 
+    def __init__(self, audio_files: list[str]):
         super().__init__()
         self.audio_files = audio_files
 
     def run(self):
         try:
 
-            encoder = VoiceEncoderWrapper()
+            encoder = create_encoder()
             embeddings = []
-
+           
+            total = len(self.audio_files)
+ 
             for i, path in enumerate(self.audio_files):
+                # Прогресс: 0–90% на извлечение, 90–100% на усреднение
+                progress = int((i / total) * 90)
                 self.progress_signal.emit(
-                    int((i / len(self.audio_files)) * 90),
-                    f"Обработка: {os.path.basename(path)}"
+                    progress,
+                    f"Обработка [{i+1}/{total}]: {os.path.basename(path)}"
                 )
+ 
                 try:
                     audio, sr = sf.read(path)
                     if audio.ndim > 1:
                         audio = audio.mean(axis=1)
-                    emb = encoder.get_embedding_from_audio(audio, sr)
+ 
+                    emb = encoder.get_embedding(audio, sr)
                     if emb is not None:
                         embeddings.append(emb)
+                    else:
+                        print(f"[VectorComputeThread] Не удалось обработать: {path}")
+ 
                 except Exception as e:
-                    print(f"Ошибка обработки {path}: {e}")
-
-            if embeddings:
-                avg_vector = np.mean(embeddings, axis=0)
-                self.progress_signal.emit(100, "Готово!")
-                self.finished_signal.emit(avg_vector)
-            else:
+                    print(f"[VectorComputeThread] Ошибка файла {path}: {e}")
+ 
+            if not embeddings:
                 self.finished_signal.emit(None)
-
+                return
+ 
+            self.progress_signal.emit(95, "Усреднение векторов...")
+ 
+            # Усредняем все эмбеддинги → один представительный вектор человека
+            avg_vector = np.mean(embeddings, axis=0)
+ 
+            self.progress_signal.emit(100, "Готово!")
+            self.finished_signal.emit(avg_vector)
+ 
         except Exception as e:
-            print(f"Ошибка вычисления вектора: {e}")
+            print(f"[VectorComputeThread] Критическая ошибка: {e}")
             self.finished_signal.emit(None)
 
 

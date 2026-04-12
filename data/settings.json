@@ -1,0 +1,7 @@
+{
+    "thresholds": {
+        "strong": 0.88,
+        "weak": 0.79,
+        "min_similarity": 0.68
+    }
+}
