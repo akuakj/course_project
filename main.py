@@ -1,5 +1,8 @@
 import sys
 import os
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
+
 from PySide6.QtWidgets import QApplication
 from controllers.main_controller import MainController
 

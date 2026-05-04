@@ -1,10 +1,17 @@
 from services.base_encoder import BaseVoiceEncoder
 
+# Реестр доступных энкодеров.
+# Ключ — строковый ID, по которому модель сохраняется в settings.json.
 AVAILABLE_ENCODERS = {
     "resemblyzer": {
         "display_name": "Resemblyzer (GE2E)",
         "dim": 256,
         "description": "256-мерный вектор. Быстрый, стабильный на русской речи."
+    },
+    "speechbrain": {
+        "display_name": "ECAPA-TDNN (SpeechBrain)",
+        "dim": 192,
+        "description": "192-мерный вектор. Точнее на коротких фрагментах, тяжелее."
     },
 }
 
@@ -12,11 +19,17 @@ DEFAULT_ENCODER = "resemblyzer"
 
 
 def create_encoder(encoder_type: str | None = None) -> BaseVoiceEncoder:
+    """
+    Фабричный метод — создаёт нужный энкодер по строковому ID.
+    
+    Если encoder_type не передан — читает из settings.json.
+    Если в настройках записан несуществующий энкодер — fallback на resemblyzer.
+    """
 
     if encoder_type is None:
         encoder_type = _get_encoder_type_from_config()
 
-    # Если в настройках сохранён несуществующий энкодер — fallback на дефолт
+    # Неизвестный ID → fallback
     if encoder_type not in AVAILABLE_ENCODERS:
         print(f"[encoder_factory] Неизвестный энкодер '{encoder_type}', используем '{DEFAULT_ENCODER}'")
         encoder_type = DEFAULT_ENCODER
@@ -24,6 +37,10 @@ def create_encoder(encoder_type: str | None = None) -> BaseVoiceEncoder:
     if encoder_type == "resemblyzer":
         from services.resemblyzer_encoder import ResemblyzerEncoder
         return ResemblyzerEncoder()
+
+    if encoder_type == "speechbrain":
+        from services.speechbrain_encoder import SpeechBrainEncoder
+        return SpeechBrainEncoder()
 
     raise ValueError(f"Энкодер '{encoder_type}' есть в реестре, но не реализован в фабрике.")
 
@@ -34,7 +51,7 @@ def get_available_encoders() -> dict:
 
 
 def _get_encoder_type_from_config() -> str:
-    """Читает тип энкодера из настроек, с fallback на дефолт."""
+    """Читает тип энкодера из settings.json, с fallback на DEFAULT_ENCODER."""
     try:
         from services.settings_manager import SettingsManager
         return SettingsManager().get("encoder_type", DEFAULT_ENCODER)
@@ -42,8 +59,9 @@ def _get_encoder_type_from_config() -> str:
         pass
 
     try:
-        import config
-        return getattr(config, "ENCODER_TYPE", DEFAULT_ENCODER)
+        from services.settings_manager import load_settings
+        settings = load_settings()
+        return settings.get("encoder_type", DEFAULT_ENCODER)
     except Exception:
         pass
 

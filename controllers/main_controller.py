@@ -9,13 +9,14 @@ class MainController(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
         self.setWindowTitle("VoiceMaxxing")
         self.setFixedSize(810, 490)
 
         self.db_manager = TinyDBVoiceManager()
 
-        # Инициализация контроллеров
+        # Проверяем нужна ли пересборка после смены модели
+        self._check_rebuild_needed()
+
         self.analysis_controller = AnalysisController(self)
         self.database_controller = DatabaseController(self)
         self.ai_controller = AIController(self)
@@ -26,6 +27,59 @@ class MainController(QMainWindow, Ui_MainWindow):
 
         self.stackedWidget.setCurrentIndex(0)
         self._set_active_menu_btn(self.btn_home)
+
+    def _check_rebuild_needed(self):
+        from services.settings_manager import load_settings, save_settings
+        settings = load_settings()
+        
+        if not settings.get("rebuild_needed", False):
+            return
+
+        # Сбрасываем флаг сразу
+        settings["rebuild_needed"] = False
+        save_settings(settings)
+
+        from PySide6.QtWidgets import QMessageBox
+        QMessageBox.information(
+            self,
+            "Пересборка базы данных",
+            "Модель была изменена. Выполняется пересборка базы данных..."
+        )
+
+        # Пересборка в текущем чистом процессе
+        self._do_rebuild()
+
+    def _do_rebuild(self):
+        import soundfile as sf
+        from services.encoder_factory import create_encoder
+        import numpy as np
+
+        encoder = create_encoder()
+        people = self.db_manager.get_all_people()
+
+        for person in people:
+            audio_files = person.get("audio_files", [])
+            embeddings = []
+            for path in audio_files:
+                try:
+                    audio, sr = sf.read(path)
+                    if audio.ndim > 1:
+                        audio = audio.mean(axis=1)
+                    emb = encoder.get_embedding(audio, sr)
+                    if emb is not None:
+                        embeddings.append(emb)
+                except Exception as e:
+                    print(f"[Rebuild] Ошибка {path}: {e}")
+
+            if embeddings:
+                avg = np.mean(embeddings, axis=0)
+                self.db_manager.update_person(person["id"], {"vector_data": avg.tolist()})
+                print(f"✅ Пересобран: {person['full_name']}")
+            else:
+                print(f"❌ Не удалось пересобрать: {person['full_name']}")
+
+        from PySide6.QtWidgets import QMessageBox
+        QMessageBox.information(self, "Готово", "Пересборка завершена!")
 
     def _setup_menu(self):
         """Настройка иконок и стилей меню"""

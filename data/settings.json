@@ -1,7 +1,16 @@
 {
+    "encoder_type": "resemblyzer",
     "thresholds": {
-        "strong": 0.88,
-        "weak": 0.79,
-        "min_similarity": 0.68
-    }
+        "resemblyzer": {
+            "strong": 0.88,
+            "weak": 0.79,
+            "min_similarity": 0.68
+        },
+        "speechbrain": {
+            "strong": 0.55,
+            "weak": 0.45,
+            "min_similarity": 0.35
+        }
+    },
+    "rebuild_needed": false
 }
