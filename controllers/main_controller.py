@@ -14,7 +14,7 @@ class MainController(QMainWindow, Ui_MainWindow):
 
         self.db_manager = TinyDBVoiceManager()
 
-        # Проверяем нужна ли пересборка после смены модели
+        # проверяем нужна ли пересборка после смены модели
         self._check_rebuild_needed()
 
         self.analysis_controller = AnalysisController(self)
@@ -35,7 +35,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         if not settings.get("rebuild_needed", False):
             return
 
-        # Сбрасываем флаг сразу
+        # сбрасываем флаг сразу
         settings["rebuild_needed"] = False
         save_settings(settings)
 
@@ -46,7 +46,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             "Модель была изменена. Выполняется пересборка базы данных..."
         )
 
-        # Пересборка в текущем чистом процессе
+        # пересборка в текущем чистом процессе
         self._do_rebuild()
 
     def _do_rebuild(self):
@@ -74,15 +74,15 @@ class MainController(QMainWindow, Ui_MainWindow):
             if embeddings:
                 avg = np.mean(embeddings, axis=0)
                 self.db_manager.update_person(person["id"], {"vector_data": avg.tolist()})
-                print(f"✅ Пересобран: {person['full_name']}")
+                print(f"Пересобран: {person['full_name']}")
             else:
-                print(f"❌ Не удалось пересобрать: {person['full_name']}")
+                print(f"Не удалось пересобрать: {person['full_name']}")
 
         from PySide6.QtWidgets import QMessageBox
         QMessageBox.information(self, "Готово", "Пересборка завершена!")
 
     def _setup_menu(self):
-        """Настройка иконок и стилей меню"""
+        # Настройка иконок и стилей меню
         self.btn_home.setText("🏠  Начало".upper())
         self.btn_analyze.setText("🎙  Анализирование".upper())
         self.btn_database.setText("🗄  База Данных".upper())
@@ -96,7 +96,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         ]
 
     def _set_active_menu_btn(self, active_btn):
-        """Подсвечивает активную кнопку меню"""
+        # Подсвечивает активную кнопку меню
         inactive_style = """
             QPushButton {
                 background-color: transparent;
@@ -131,7 +131,7 @@ class MainController(QMainWindow, Ui_MainWindow):
             btn.setStyleSheet(active_style if btn is active_btn else inactive_style)
 
     def _setup_home_page(self):
-        """Перестраивает стартовую страницу через QWebEngineView"""
+        # Перестраивает стартовую страницу через QWebEngineView
         from PySide6.QtWebEngineWidgets import QWebEngineView
         from PySide6.QtWidgets import QVBoxLayout, QWidget
 
@@ -313,7 +313,7 @@ class MainController(QMainWindow, Ui_MainWindow):
         layout.addWidget(self.web_view)
 
     def setup_connections(self):
-        """Подключение всех кнопок"""
+        # Подключение всех кнопок
         self.btn_home.clicked.connect(lambda: [self.stackedWidget.setCurrentIndex(0), self._set_active_menu_btn(self.btn_home)])
         self.btn_analyze.clicked.connect(lambda: [self.stackedWidget.setCurrentIndex(1), self._set_active_menu_btn(self.btn_analyze)])
         self.btn_database.clicked.connect(lambda: [self.stackedWidget.setCurrentIndex(2), self._set_active_menu_btn(self.btn_database)])

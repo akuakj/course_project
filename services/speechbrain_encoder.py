@@ -75,7 +75,6 @@ class SpeechBrainEncoder(BaseVoiceEncoder):
             with torch.no_grad():
                 embedding = self._model.encode_batch(wav_tensor, wav_lens)
 
-            # embedding shape: [1, 1, 192] → flatten → [192]
             result = embedding.squeeze().cpu().numpy().astype(np.float32)
             norm = np.linalg.norm(result)
 

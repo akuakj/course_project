@@ -19,12 +19,6 @@ DEFAULT_ENCODER = "resemblyzer"
 
 
 def create_encoder(encoder_type: str | None = None) -> BaseVoiceEncoder:
-    """
-    Фабричный метод — создаёт нужный энкодер по строковому ID.
-    
-    Если encoder_type не передан — читает из settings.json.
-    Если в настройках записан несуществующий энкодер — fallback на resemblyzer.
-    """
 
     if encoder_type is None:
         encoder_type = _get_encoder_type_from_config()
@@ -46,12 +40,12 @@ def create_encoder(encoder_type: str | None = None) -> BaseVoiceEncoder:
 
 
 def get_available_encoders() -> dict:
-    """Возвращает реестр доступных энкодеров для UI."""
+    # возвращает реестр доступных энкодеров для UI
     return AVAILABLE_ENCODERS.copy()
 
 
 def _get_encoder_type_from_config() -> str:
-    """Читает тип энкодера из settings.json, с fallback на DEFAULT_ENCODER."""
+    # читает тип энкодера из settings.json, с fallback на DEFAULT_ENCODER
     try:
         from services.settings_manager import SettingsManager
         return SettingsManager().get("encoder_type", DEFAULT_ENCODER)

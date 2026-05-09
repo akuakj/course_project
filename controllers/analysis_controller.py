@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QSizePolicy, QFrame, QProgressBar, QScrollArea, QPushButton
 )
 from PySide6.QtCore import QTimer, QThread, Signal, Qt
-from PySide6.QtGui import QPainter, QColor, QPen, QPixmap, QFont
+from PySide6.QtGui import QPainter, QColor, QPen, QPixmap
 from services.voice_analysis_service import VoiceAnalysisService
 import threading
 from services.db_manager import TinyDBVoiceManager
@@ -80,7 +80,7 @@ class WaveformWidget(QWidget):
         painter.end()
 
 
-#  Основной контроллер анализа
+#  основной контроллер анализа
 class AnalysisController:
     def __init__(self, main):
         self.main = main

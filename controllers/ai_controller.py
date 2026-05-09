@@ -2,9 +2,9 @@ import numpy as np
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QPushButton, QFrame, QSlider, QScrollArea,
-    QGridLayout, QMessageBox, QButtonGroup, QRadioButton
+    QGridLayout, QMessageBox
 )
-from PySide6.QtCore import Qt, QThread, Signal
+from PySide6.QtCore import Qt
 from services.settings_manager import (
     save_thresholds, get_thresholds,
     get_encoder_type, save_encoder_type
@@ -12,99 +12,11 @@ from services.settings_manager import (
 from services.encoder_factory import get_available_encoders
 import config
 
-
-# ─────────────────────────────────────────────────────────────
-#  Поток пересборки векторов БД
-# ─────────────────────────────────────────────────────────────
-
-class RebuildThread(QThread):
-    """
-    Пересчитывает голосовые векторы для всех записей в БД
-    с использованием текущего (нового) энкодера.
-    
-    Запускается в отдельном потоке чтобы не замораживать UI.
-    Сигналы:
-        progress_signal(int, str) — прогресс (0-100) и статусное сообщение
-        finished_signal(bool, str) — успех/ошибка и финальное сообщение
-    """
-    progress_signal = Signal(int, str)
-    finished_signal = Signal(bool, str)
-
-    def __init__(self, db_manager):
-        super().__init__()
-        self.db_manager = db_manager
-
-    def run(self):
-        try:
-            import soundfile as sf
-            from services.encoder_factory import create_encoder
-
-            # Создаём энкодер с текущим типом из settings.json
-            encoder = create_encoder()
-            people = self.db_manager.get_all_people()
-
-            if not people:
-                self.finished_signal.emit(False, "База данных пуста")
-                return
-
-            total = len(people)
-            errors = 0
-
-            for i, person in enumerate(people):
-                name = person["full_name"]
-                self.progress_signal.emit(
-                    int(i / total * 100),
-                    f"[{i+1}/{total}] Обрабатываем: {name}"
-                )
-
-                audio_files = person.get("audio_files", [])
-                if not audio_files:
-                    print(f"[RebuildThread] У {name} нет аудиофайлов, пропускаем")
-                    errors += 1
-                    continue
-
-                embeddings = []
-                for path in audio_files:
-                    try:
-                        audio, sr = sf.read(path)
-                        if audio.ndim > 1:
-                            audio = audio.mean(axis=1)
-                        emb = encoder.get_embedding(audio, sr)
-                        if emb is not None:
-                            embeddings.append(emb)
-                    except Exception as e:
-                        print(f"[RebuildThread] Ошибка файла {path}: {e}")
-
-                if not embeddings:
-                    print(f"[RebuildThread] Не удалось получить эмбеддинги для {name}")
-                    errors += 1
-                    continue
-
-                # Усредняем эмбеддинги → один вектор человека
-                avg_vector = np.mean(embeddings, axis=0)
-                self.db_manager.update_person(
-                    person["id"],
-                    {"vector_data": avg_vector.tolist()}
-                )
-
-            self.progress_signal.emit(100, "Готово!")
-            msg = f"Пересборка завершена. Обработано: {total - errors}/{total}"
-            if errors:
-                msg += f" ({errors} ошибок)"
-            self.finished_signal.emit(True, msg)
-
-        except Exception as e:
-            self.finished_signal.emit(False, f"Критическая ошибка: {e}")
-
-
-# ─────────────────────────────────────────────────────────────
 #  Контроллер страницы "Нейросеть"
-# ─────────────────────────────────────────────────────────────
-
 class AIController:
     def __init__(self, main_controller):
         self.main = main_controller
-        self._rebuild_thread = None
+        # self._rebuild_thread = None
         self._setup_ui()
 
     def setup_connections(self):
@@ -117,12 +29,12 @@ class AIController:
         main_layout.setContentsMargins(10, 6, 10, 6)
         main_layout.setSpacing(6)
 
-        # ── СЕКЦИЯ ВЫБОРА МОДЕЛИ ─────────────────────────────
+        # Секция выбора модели
         model_card = self._make_card()
         model_layout = QVBoxLayout(model_card)
         model_layout.setContentsMargins(16, 10, 16, 10)
         model_layout.setSpacing(8)
-
+    
         model_layout.addWidget(self._section_label("МОДЕЛЬ ЭНКОДЕРА"))
 
         controls_row = QHBoxLayout()
@@ -191,7 +103,9 @@ class AIController:
         model_layout.addWidget(self.rebuild_status_lbl)
 
         main_layout.addWidget(model_card)
-        # ── СЕКЦИЯ ПОРОГОВ ──────────────────────────────────
+
+
+        # секция порогов
         thresholds_card = self._make_card()
         thresholds_layout = QVBoxLayout(thresholds_card)
         thresholds_layout.setContentsMargins(16, 10, 16, 10)
@@ -241,7 +155,7 @@ class AIController:
 
         main_layout.addWidget(thresholds_card)
 
-        # ── СЕКЦИЯ МАТРИЦЫ ───────────────────────────────────
+        # секция матрицы
         matrix_card = self._make_card()
         matrix_layout = QVBoxLayout(matrix_card)
         matrix_layout.setContentsMargins(16, 10, 16, 10)
@@ -251,7 +165,7 @@ class AIController:
         matrix_header_row.addWidget(self._section_label("МАТРИЦА СХОЖЕСТИ"))
         matrix_header_row.addStretch()
         self.refresh_btn = QPushButton("Обновить")
-        self.refresh_btn.setFixedSize(100, 28)
+        self.refresh_btn.setFixedSize(130, 28)
         self.refresh_btn.setCursor(Qt.PointingHandCursor)
         self.refresh_btn.clicked.connect(self._build_matrix)
         self.refresh_btn.setStyleSheet("""
@@ -265,7 +179,7 @@ class AIController:
         matrix_header_row.addWidget(self.refresh_btn)
         matrix_layout.addLayout(matrix_header_row)
 
-        strong, weak, min_sim = get_thresholds()
+        strong, weak, _ = get_thresholds()
         legend_row = QHBoxLayout()
         for color, text in [
             ("#10B981", f"≥ {strong:.2f} высокая"),
@@ -300,8 +214,7 @@ class AIController:
 
         self._build_matrix()
 
-    # ─── Логика выбора и применения модели ──────────────────
-
+    # выбор и применение модели
     def _get_selected_encoder_id(self) -> str:
         """Возвращает ID энкодера из выпадающего списка."""
         return self.encoder_combo.currentData()
@@ -327,8 +240,8 @@ class AIController:
             "Смена модели",
             f"Выбрана модель: {display_name}\n\n"
             "Для применения необходимо пересчитать голосовые векторы.\n\n"
-            "⏳ Это может занять несколько минут при следующем запуске.\n"
-            "🔄 Приложение будет перезапущено.\n\n"
+            "Это может занять несколько минут при следующем запуске.\n"
+            "Приложение будет перезапущено.\n\n"
             "Продолжить?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
         )
@@ -340,9 +253,10 @@ class AIController:
                     break
             return
 
-        # Сохраняем выбор и сразу перезапускаемся
+        # сохраняем выбор и сразу перезапускаемся
         save_encoder_type(selected_id)
-        # Помечаем что нужна пересборка при следующем старте
+
+        # помечаем, что нужна пересборка при следующем старте
         from services.settings_manager import load_settings, save_settings
         settings = load_settings()
         settings["rebuild_needed"] = True
@@ -352,69 +266,7 @@ class AIController:
         subprocess.Popen([sys.executable] + sys.argv)
         self.main.close()
 
-
-    def _rebuild_database(self):
-        """
-        Запускает пересчёт всех векторов в БД через RebuildThread.
-        """
-        if self._rebuild_thread and self._rebuild_thread.isRunning():
-            QMessageBox.information(
-                self.main, "Подождите", "Пересборка уже выполняется!"
-            )
-            return
-
-        selected_id = self._get_selected_encoder_id()
-        save_encoder_type(selected_id)
-
-        reply = QMessageBox.question(
-            self.main,
-            "Пересборка базы данных",
-            "Все голосовые векторы будут пересчитаны с использованием "
-            "текущей модели.\n\n"
-            "Это может занять несколько минут. Продолжить?",
-            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
-        )
-        if reply != QMessageBox.StandardButton.Yes:
-            return
-
-        # Блокируем кнопки на время пересборки
-        self.rebuild_btn.setEnabled(False)
-        self.apply_model_btn.setEnabled(False)
-        self.rebuild_status_lbl.show()
-
-        self.rebuild_status_lbl.setText("Запуск...")
-
-        self._rebuild_thread = RebuildThread(self.main.db_manager)
-        self._rebuild_thread.progress_signal.connect(self._on_rebuild_progress)
-        self._rebuild_thread.finished_signal.connect(self._on_rebuild_finished)
-        self._rebuild_thread.start()
-
-    def _on_rebuild_progress(self, value: int, message: str):
-        self.rebuild_status_lbl.setText(f"{value}% — {message}")
-
-    def _on_rebuild_finished(self, success: bool, message: str):
-        self.apply_model_btn.setEnabled(True)
-        self.rebuild_status_lbl.hide()
-
-        if success:
-            QMessageBox.information(
-                self.main, "Готово",
-                f"{message}\n\nПриложение будет перезапущено."
-            )
-            import sys, subprocess
-            subprocess.Popen([sys.executable] + sys.argv)
-            
-            # Ждём завершения потока перед закрытием
-            if self._rebuild_thread and self._rebuild_thread.isRunning():
-                self._rebuild_thread.quit()
-                self._rebuild_thread.wait(3000)
-            
-            self.main.close()
-        else:
-            QMessageBox.critical(self.main, "Ошибка пересборки", message)
-
-    # ─── Пороги ─────────────────────────────────────────────
-
+    # пороги
     def _make_slider(self, name, color, value):
         slider = QSlider(Qt.Horizontal)
         slider.setRange(0, 100)
@@ -476,8 +328,7 @@ class AIController:
         except Exception as e:
             QMessageBox.critical(self.main, "Ошибка", f"Не удалось сохранить: {e}")
 
-    # ─── Матрица схожести ────────────────────────────────────
-
+    # матрица схожести
     def _build_matrix(self):
         while self.matrix_inner.count():
             item = self.matrix_inner.takeAt(0)
@@ -500,15 +351,15 @@ class AIController:
             CELL_H = 24   # высота ячейки
             ROW_LBL_W = 55  # ширина подписи строки
 
-            # Заголовки столбцов
+            # заголовки столбцов
             for j, name in enumerate(names):
                 lbl = QLabel(name[:7])
                 lbl.setAlignment(Qt.AlignCenter)
                 lbl.setFixedSize(CELL_W, 20)
-                lbl.setStyleSheet("color: #64748b; font-size: 10px; border: none; background: transparent;")
+                lbl.setStyleSheet("color: R64748b; font-size: 10px; border: none; background: transparent;")
                 self.matrix_inner.addWidget(lbl, 0, j + 1)
 
-            # Строки
+            # строки
             for i in range(n):
                 row_lbl = QLabel(names[i][:7])
                 row_lbl.setAlignment(Qt.AlignVCenter)
@@ -548,7 +399,6 @@ class AIController:
             return 0.0
         return float(np.dot(a, b) / (norm_a * norm_b))
 
-    # ─── Вспомогательные ────────────────────────────────────
 
     def _make_card(self):
         card = QFrame()

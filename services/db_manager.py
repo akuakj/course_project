@@ -54,14 +54,14 @@ class TinyDBVoiceManager:
                 'photo': to_relative_path(photo) if photo else None,
                 'vector_data': vector_data,
                 'notes': notes or "",
-                'date_of_birth': date_of_birth or ""  # ← НОВОЕ ПОЛЕ
+                'date_of_birth': date_of_birth or ""
             }
 
             self.voice_table.insert(doc)
-            print(f"✅ Добавлен: {full_name}")
+            print(f"Добавлен: {full_name}")
             return record_id
         except Exception as e:
-            print(f"❌ Ошибка добавления {full_name}: {e}")
+            print(f"Ошибка добавления {full_name}: {e}")
             return None
 
     def get_person_by_id(self, person_id):
@@ -76,14 +76,14 @@ class TinyDBVoiceManager:
                 updated_data['audio_files'] = [to_relative_path(f) for f in updated_data['audio_files']]
 
             self.voice_table.update(updated_data, self.query.id == person_id)
-            print(f"✅ Обновлены данные человека {person_id}")
+            print(f"Обновлены данные человека {person_id}")
             return True
         except Exception as e:
-            print(f"❌ Ошибка обновления человека: {e}")
+            print(f"Ошибка обновления человека: {e}")
             return False
 
     def update_person_photo(self, person_id, photo_path):
-        """Обновляет путь к фото в записи пользователя"""
+        # Обновляет путь к фото в записи пользователя
         try:
             # TinyDB ищет запись по полю 'id'
             relative_path = to_relative_path(photo_path)
@@ -94,21 +94,15 @@ class TinyDBVoiceManager:
             return False
 
     def get_person_by_name(self, full_name):
-        """
-        Поиск человека по ФИО
-        """
+        # поиск по фио
         return self.voice_table.search(self.query.full_name == full_name)
 
     def get_all_people(self):
-        """
-        Получение всех записей из базы данных
-        """
+        # Получение всех записей из базы данныхм
         return [self._normalize_person(p) for p in self.voice_table.all()]
 
     def search_similar_voices(self, query_vector, top_k=5, similarity_threshold=0.7):
-        """
-        Поиск похожих голосов по вектору
-        """
+        # Поиск похожих голосов по вектору
         if isinstance(query_vector, np.ndarray):
             query_vector = query_vector.tolist()
 
@@ -131,9 +125,7 @@ class TinyDBVoiceManager:
         return similarities[:top_k]
 
     def _cosine_similarity(self, vec1, vec2):
-        """
-        Вычисление косинусного сходства между двумя векторами
-        """
+        # Вычисление косинусного сходства между двумя векторами
         if isinstance(vec1, list):
             vec1 = np.array(vec1)
         if isinstance(vec2, list):
@@ -149,9 +141,7 @@ class TinyDBVoiceManager:
         return float(np.dot(vec1, vec2) / (norm1 * norm2))
 
     def delete_person(self, person_id):
-        """
-        Удаление человека по нашему UUID
-        """
+        # Удаление человека по нашему UUID
         try:
             self.voice_table.remove(self.query.id == person_id)
             print(f"✅ Удален человек с ID: {person_id}")
@@ -161,9 +151,7 @@ class TinyDBVoiceManager:
             return False
 
     def get_statistics(self):
-        """
-        Получение статистики базы данных
-        """
+        # Получение статистики базы данных
         all_people = self.get_all_people()
 
         if not all_people:
@@ -182,5 +170,5 @@ class TinyDBVoiceManager:
         }
 
     def close(self):
-        """Закрытие соединения с БД"""
+        # Закрытие соединения с БД
         self.db.close()

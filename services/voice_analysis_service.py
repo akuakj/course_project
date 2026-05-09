@@ -153,7 +153,6 @@ class VoiceAnalysisService:
         return float(dot_product / (norm_a * norm_b))
 
     def _confidence(self, score: float) -> str:
-        """Определение уверенности в результате"""
         if score >= self.STRONG_THRESHOLD:
             return "высокая"
         elif score >= self.WEAK_THRESHOLD:

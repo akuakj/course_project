@@ -1,9 +1,8 @@
-from PySide6.QtWidgets import QMessageBox, QVBoxLayout, QWidget
-from PySide6.QtCore import Qt, QObject, Slot
+from PySide6.QtWidgets import QMessageBox
+from PySide6.QtCore import QObject, Slot
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWebChannel import QWebChannel
 from datetime import datetime
-from services.db_manager import TinyDBVoiceManager
 from views.person_details_dialog import PersonDetailsDialog
 from views.add_person_dialog import AddPersonDialog
 
@@ -54,7 +53,6 @@ class DatabaseController:
         self._render_table([])
 
     def _render_table(self, people):
-        """Рендерим HTML таблицу"""
         rows_html = ""
         for i, person in enumerate(people):
             created_date = person['created_at'].split('T')[0]
@@ -171,7 +169,7 @@ function handleDblClick(personId) {{
         self.web_view.setHtml(html)
 
     def setup_connections(self):
-        """Подключение кнопок базы данных"""
+        # Подключение кнопок базы данных
         self.main.btn_refresh_db.clicked.connect(self.refresh_database)
         self.main.btn_delete_record.clicked.connect(self.delete_selected_record)
         self.main.btn_search_text.clicked.connect(self.search_in_database)
@@ -179,7 +177,7 @@ function handleDblClick(personId) {{
         self.main.btn_add_person.clicked.connect(self._open_add_person)
 
     def refresh_database(self):
-        """Обновление таблицы"""
+        # Обновление таблицы
         try:
             self._all_people = self.db_manager.get_all_people()
             self._render_table(self._all_people)
@@ -190,7 +188,7 @@ function handleDblClick(personId) {{
             QMessageBox.warning(self.main, "Ошибка", f"Не удалось загрузить базу данных: {e}")
 
     def _open_details_by_id(self, person_id):
-        """Открытие окна деталей по ID"""
+        # Открытие окна деталей по ID
         person_data = self.db_manager.get_person_by_id(person_id)
         if person_data:
             dlg = PersonDetailsDialog(
@@ -206,8 +204,9 @@ function handleDblClick(personId) {{
             on_saved=self.refresh_database
         )
         dlg.exec()
+
     def save_person_data(self, updated_person):
-        """Сохранение изменённых данных человека"""
+        # Сохранение изменённых данных человека
         try:
             person_id = updated_person["id"]
             self.db_manager.update_person(person_id, updated_person)
@@ -217,7 +216,7 @@ function handleDblClick(personId) {{
             print(f"Ошибка сохранения данных: {e}")
 
     def update_statistics(self):
-        """Обновление статистики базы данных"""
+        # Обновление статистики базы данных 
         try:
             stats = self.db_manager.get_statistics()
             self.main.label_total_records.setText(f"Всего записей: {stats['total_records']}")
@@ -250,7 +249,7 @@ function handleDblClick(personId) {{
             print(f"Ошибка обновления статистики: {e}")
 
     def delete_selected_record(self):
-        """Удаление выбранной записи"""
+        # Удаление выбранной записи 
         try:
             if not self.selected_person_id:
                 QMessageBox.information(self.main, "Информация", "Выберите запись для удаления")
@@ -277,7 +276,7 @@ function handleDblClick(personId) {{
             QMessageBox.warning(self.main, "Ошибка", f"Ошибка при удалении: {e}")
 
     def search_in_database(self):
-        """Поиск по базе данных"""
+        # Поиск по базе данных
         try:
             search_text = self.main.lineEdit_search.text().strip().lower()
             if not search_text:

@@ -50,7 +50,7 @@ def load_settings() -> dict:
 
 
 def save_settings(settings: dict) -> bool:
-    """Записывает весь словарь настроек в settings.json."""
+    # Записывает весь словарь настроек в settings.json
     try:
         os.makedirs(os.path.dirname(SETTINGS_PATH), exist_ok=True)
         with open(SETTINGS_PATH, "w", encoding="utf-8") as f:
@@ -96,13 +96,13 @@ def save_thresholds(strong: float, weak: float, min_similarity: float) -> bool:
 
 
 def get_encoder_type() -> str:
-    """Возвращает ID активного энкодера."""
+    # Возвращает ID активного энкодера
     settings = load_settings()
     return settings.get("encoder_type", DEFAULT_SETTINGS["encoder_type"])
 
 
 def save_encoder_type(encoder_type: str) -> bool:
-    """Сохраняет выбранный энкодер в настройки."""
+    # Сохраняет выбранный энкодер в настройки
     settings = load_settings()
     settings["encoder_type"] = encoder_type
     return save_settings(settings)
