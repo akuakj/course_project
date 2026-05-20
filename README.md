@@ -19,7 +19,7 @@
 
 ## Установка
 ```bash
-git clone https://github.com/your/repo.git
+git clone https://github.com/akuakj/voice-identification.git
 cd voice-identification
 python -m venv .venv
 .venv\Scripts\activate
