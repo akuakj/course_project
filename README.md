@@ -31,5 +31,5 @@ pip install -r requirements.txt
 python main.py
 ```
 
-> **Windows:** для работы модели SpeechBrain включи 
-> Включить "Режим разработчика" в Параметрах Windows
+> **Windows:** для работы модели SpeechBrain включить
+> "Режим разработчика" в Параметрах Windows
