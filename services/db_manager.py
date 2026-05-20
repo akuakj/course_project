@@ -144,10 +144,10 @@ class TinyDBVoiceManager:
         # Удаление человека по нашему UUID
         try:
             self.voice_table.remove(self.query.id == person_id)
-            print(f"✅ Удален человек с ID: {person_id}")
+            print(f"Удален человек с ID: {person_id}")
             return True
         except Exception as e:
-            print(f"❌ Ошибка удаления: {e}")
+            print(f"Ошибка удаления: {e}")
             return False
 
     def get_statistics(self):

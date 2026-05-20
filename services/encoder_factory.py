@@ -16,10 +16,15 @@ AVAILABLE_ENCODERS = {
 }
 
 DEFAULT_ENCODER = "resemblyzer"
+_encoder_instance = None
 
 
 def create_encoder(encoder_type: str | None = None) -> BaseVoiceEncoder:
+    global _encoder_instance
 
+    if _encoder_instance is not None:
+        return _encoder_instance
+    
     if encoder_type is None:
         encoder_type = _get_encoder_type_from_config()
 
@@ -30,14 +35,22 @@ def create_encoder(encoder_type: str | None = None) -> BaseVoiceEncoder:
 
     if encoder_type == "resemblyzer":
         from services.resemblyzer_encoder import ResemblyzerEncoder
-        return ResemblyzerEncoder()
+        _encoder_instance = ResemblyzerEncoder()
 
-    if encoder_type == "speechbrain":
+    elif encoder_type == "speechbrain":
         from services.speechbrain_encoder import SpeechBrainEncoder
-        return SpeechBrainEncoder()
+        _encoder_instance = SpeechBrainEncoder()
 
-    raise ValueError(f"Энкодер '{encoder_type}' есть в реестре, но не реализован в фабрике.")
+    else:
+        raise ValueError(f"Энкодер '{encoder_type}' есть в реестре, но не реализован в фабрике.")
 
+    return _encoder_instance
+
+
+def reset_encoder():
+    # Сбрасываем синглтон при смене модели — вызывать перед перезапуском
+    global _encoder_instance
+    _encoder_instance = None
 
 def get_available_encoders() -> dict:
     # возвращает реестр доступных энкодеров для UI

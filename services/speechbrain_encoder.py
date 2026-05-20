@@ -21,7 +21,7 @@ class SpeechBrainEncoder(BaseVoiceEncoder):
                 savedir="data/models/ecapa_tdnn",
                 run_opts={"device": "cpu"}
             )
-            print("[SpeechBrainEncoder] Модель загружена ✅")
+            print("[SpeechBrainEncoder] Модель загружена")
         except Exception as e:
             print(f"[SpeechBrainEncoder] Ошибка загрузки модели: {e}")
             raise

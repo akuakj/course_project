@@ -16,7 +16,7 @@ class BaseVoiceEncoder(ABC):
     @abstractmethod
     def model_name(self) -> str:
         pass
-
+    
     @property
     @abstractmethod
     def model_id(self) -> str:

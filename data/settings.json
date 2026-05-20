@@ -1,5 +1,5 @@
 {
-    "encoder_type": "resemblyzer",
+    "encoder_type": "speechbrain",
     "thresholds": {
         "resemblyzer": {
             "strong": 0.88,
